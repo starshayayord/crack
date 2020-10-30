@@ -13,8 +13,7 @@ namespace Yord.Crack.Begin.Tests
         {
             _equation = new Equation();
         }
-
-
+        
         [Test]
         public void Should_FindAllSolutions()
         {
