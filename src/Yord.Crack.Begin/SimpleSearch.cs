@@ -1,28 +1,41 @@
-using System.Linq;
-
 namespace Yord.Crack.Begin
 {
     public static class SimpleSearch
     {
         public static int GetIndex(int[] sortedArray, int element)
         {
-            var result = 0;
-            while (true)
+            var left = 0;
+            var right = sortedArray.Length - 1;
+            while (left <= right)
             {
-                if (sortedArray.Length == 0) return -1;
-                var middleIndex = sortedArray.Length / 2;
-                result += middleIndex;
-                if (sortedArray[middleIndex] == element) return result;
-                if (sortedArray[middleIndex] > element)
+                var middle = (right + left) / 2;
+                if (sortedArray[middle] == element) return middle;
+                if (sortedArray[middle] > element)
                 {
-                    result = 0;
-                    sortedArray = sortedArray.Take(middleIndex).ToArray();
+                    right = middle - 1;
                 }
                 else
                 {
-                    sortedArray = sortedArray.Skip(middleIndex).ToArray();
+                    left = middle + 1;
                 }
             }
+
+            return -1;
+        }
+
+        public static int GetIndexRec(int[] sortedArray, int element)
+        {
+            return Rec(sortedArray, element, 0, sortedArray.Length - 1);
+        }
+
+        private static int Rec(int[] sortedArray, int element, int l, int r)
+        {
+            if (l > r) return -1;
+            var middle = (r + l) / 2;
+            if (sortedArray[middle] == element) return middle;
+            return sortedArray[middle] > element
+                ? Rec(sortedArray, element, l, middle - 1)
+                : Rec(sortedArray, element, middle + 1, r);
         }
     }
 }
