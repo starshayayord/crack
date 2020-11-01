@@ -49,17 +49,19 @@ namespace Yord.Crack.Begin
             {
                 foreach (var journalState in journalStates)
                 {
-                    if (journalState.CanBeFromJournal
-                        && !journalState.WordsInJournal.TryGetValue(word, out var counterInJournal))
+                    if (!journalState.CanBeFromJournal)
                     {
-                        if (counterInJournal == 0)
-                        {
-                            journalState.CanBeFromJournal = false;
-                        }
-                        else
-                        {
-                            journalState.WordsInJournal[word]--;
-                        }
+                        continue;
+                    }
+
+                    if (!journalState.WordsInJournal.TryGetValue(word, out var counterInJournal)
+                        || counterInJournal == 0)
+                    {
+                        journalState.CanBeFromJournal = false;
+                    }
+                    else
+                    {
+                        journalState.WordsInJournal[word]--;
                     }
                 }
             }
