@@ -2,6 +2,7 @@ namespace Yord.Crack.Begin
 {
     public static class SimpleSearch
     {
+        // Найти индекс элемента в отсортированном массиве. Элементы массива уникальны.
         public static int GetIndex(int[] sortedArray, int element)
         {
             var left = 0;
