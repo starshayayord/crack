@@ -17,6 +17,7 @@ namespace Yord.Crack.Begin
 
             entries = new Entry[size];
             freeList = -1;
+            freeCount = size;
         }
 
         private struct Entry
@@ -26,12 +27,7 @@ namespace Yord.Crack.Begin
             public TKey key;
             public TValue value;
         }
-
-        // кол-во элементов в словаре равно количеству минус кол-во дырок
-        public int Count
-        {
-            get { return count - freeCount; }
-        }
+        
 
         // Все записи лежат в массиве записей.
         // Пока элементы не удаляли, записи будут храниться в массиве последовательно.
@@ -45,13 +41,23 @@ namespace Yord.Crack.Begin
         // чтобы решить, какое значение имеется ввиду, используется chaining (next).
         private int[] buckets;
 
-        // при удалении первое freeList указывает на пустое место 
+        // при удалении freeList становится равен индексу пустого элемента в entities (последнего удаленного по порядку,
+        // но первого удаленного в списке удаленных)
+        // то есть entities[freeList].next указывает на следующий индекс удаленного и т.д.
         private int freeList;
 
+        // кол-во освободившихся мест при удалении
         private int freeCount;
 
+        //кол-во элементов в entities, в том числе условно свободных
         private int count;
-
+        
+        // кол-во элементов в словаре равно количеству минус кол-во дырок
+        public int Count
+        {
+            get { return count - freeCount; }
+        }
+        
         public void Insert(TKey key, TValue value)
         {
             //считаем хеш ключа, убирая отрицательные значения
@@ -121,7 +127,7 @@ namespace Yord.Crack.Begin
                 // если хэшкод и ключ совпали с ключом удаляемого элемента
                 if (entries[i].hashCode == hashCode && entries[i].key.Equals(key))
                 {
-                    // если элемент был не последним, то кладем в целевой бакет индекс следующего
+                    // если элемент был последним, то кладем в целевой бакет индекс следующего
                     if (last < 0)
                     {
                         buckets[bucket] = entries[i].next;
@@ -195,6 +201,8 @@ namespace Yord.Crack.Begin
                     //считаем его новый целевой бакет
                     int bucket = newEntries[i].hashCode % newSize;
                     // индексом следующего элемента для текущего будет индекс, который лежит в целевом бакете (если он есть) или -1
+                    //т.е. если мы за ЭТОТ цикл переноса в newBuckets уже что-то туда положили, то кладем следующий,
+                    //а в его _next кладем ссылку на уже лежавший
                     newEntries[i].next = newBuckets[bucket];
                     // индекс в целевом бакете = индексу текущего элемента
                     newBuckets[bucket] = i;
