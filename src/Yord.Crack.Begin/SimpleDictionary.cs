@@ -17,7 +17,6 @@ namespace Yord.Crack.Begin
 
             entries = new Entry[size];
             freeList = -1;
-            freeCount = size;
         }
 
         private struct Entry
@@ -27,7 +26,7 @@ namespace Yord.Crack.Begin
             public TKey key;
             public TValue value;
         }
-        
+
 
         // Все записи лежат в массиве записей.
         // Пока элементы не удаляли, записи будут храниться в массиве последовательно.
@@ -51,13 +50,13 @@ namespace Yord.Crack.Begin
 
         //кол-во элементов в entities, в том числе условно свободных
         private int count;
-        
+
         // кол-во элементов в словаре равно количеству минус кол-во дырок
         public int Count
         {
             get { return count - freeCount; }
         }
-        
+
         public void Insert(TKey key, TValue value)
         {
             //считаем хеш ключа, убирая отрицательные значения
@@ -174,6 +173,12 @@ namespace Yord.Crack.Begin
             }
 
             return default(TValue);
+        }
+
+        public TValue this[TKey index]
+        {
+            get => GetValueOrDefault(index);
+            set => Insert(index, value);
         }
 
         private void Resize()

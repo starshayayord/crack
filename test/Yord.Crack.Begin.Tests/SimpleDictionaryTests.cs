@@ -60,5 +60,28 @@ namespace Yord.Crack.Begin.Tests
 
             Assert.AreEqual(2, value);
         }
+        
+        
+        [Test]
+        public void Should_GetValueOrDefault_ByIndexer()
+        {
+            var dict = new SimpleDictionary<int, int>(1);
+            dict.Insert(10, 1);
+            
+            var value = dict[10];
+
+            Assert.AreEqual(1, value);
+        }
+        
+        [Test]
+        public void Should_SetValue_ByIndexer()
+        {
+            var dict = new SimpleDictionary<int, int>(1);
+            
+            dict[10] =  1;
+            
+            var value = dict[10];
+            Assert.AreEqual(1, value);
+        }
     }
 }
