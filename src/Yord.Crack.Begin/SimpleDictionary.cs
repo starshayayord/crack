@@ -163,9 +163,8 @@ namespace Yord.Crack.Begin
             int hashCode = key.GetHashCode() & 0x7FFFFFFF;
             //вычисляем его бакет
             int bucket = hashCode % buckets.Length;
-            int last = -1; // индекс последнего
             //идем по индексам (по списку) начиная с индекса, лежащего в целевом бакете и по каждосу следюющему _next
-            for (int i = buckets[bucket]; i >= 0; last = i, i = entries[i].next)
+            for (int i = buckets[bucket]; i >= 0; i = entries[i].next)
             {
                 // если хэшкод и ключ совпали с ключом удаляемого элемента
                 if (entries[i].hashCode == hashCode && entries[i].key.Equals(key))
