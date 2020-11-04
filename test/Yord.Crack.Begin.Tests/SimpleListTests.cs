@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace Yord.Crack.Begin.Tests
@@ -15,8 +14,9 @@ namespace Yord.Crack.Begin.Tests
             list.Add(10);
             Assert.AreEqual(1, list.Count);
 
-            list.Remove(10);
+            var result = list.Remove(10);
             Assert.AreEqual(0, list.Count);
+            Assert.IsTrue(result);
         }
 
         [Test]
@@ -91,6 +91,17 @@ namespace Yord.Crack.Begin.Tests
 
             Assert.IsTrue(contains1);
             Assert.IsFalse(contains2);
+        }
+        
+        [Test]
+        public void Should_RemoveRange_Successfully()
+        {
+            var list = new SimpleList<int>(2);
+            list[0] = 10;
+            list[1] = 10;
+            list.RemoveRange(0,2);
+
+            Assert.AreEqual(0, list.Count);
         }
     }
 }

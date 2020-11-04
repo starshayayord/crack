@@ -13,8 +13,8 @@ namespace Yord.Crack.Begin
 
         public SimpleList(int capacity)
         {
-            _items = new T[capacity];
             _size = capacity;
+            _items = new T[capacity];
         }
 
         public void CopyTo(Array array, int index)
