@@ -184,7 +184,7 @@ namespace Yord.Crack.Begin
         private void Resize()
         {
             // каждый раз величиваем вместимость вдвое
-            int newSize = count * 2;
+            int newSize = count > 0? count * 2 : 1;
             int[] newBuckets = new int[newSize]; // создаем новый массив  bucket'ов увеличенного размера 
             //инициализируем его указатели -1 (пустыми индексами) 
             for (int i = 0; i < newBuckets.Length; i++)

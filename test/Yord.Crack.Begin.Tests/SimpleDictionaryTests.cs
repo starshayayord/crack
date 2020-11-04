@@ -56,8 +56,7 @@ namespace Yord.Crack.Begin.Tests
             dict.Insert(10, 2);
             
             var value = dict.GetValueOrDefault(10);
-
-
+            
             Assert.AreEqual(2, value);
         }
         
