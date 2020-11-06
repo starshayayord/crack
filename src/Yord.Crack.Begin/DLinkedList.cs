@@ -108,18 +108,17 @@ namespace Yord.Crack.Begin
 
         public void Reverse()
         {
-            var previous = _head;
-            var current = _head.Next;
+            DNode previous = null;
+            var current = _head;
             while (current != null)
             {
-                previous.Next = previous.Previous;
-                previous.Previous = current;
+                var tmp = current.Next;
+                current.Next = previous;
+                current.Previous = tmp;
                 previous = current;
-                current = current.Next;
+                current = tmp;
             }
-
-            previous.Next = previous.Previous;
-            previous.Previous = null;
+            
             _head = previous;
         }
 
