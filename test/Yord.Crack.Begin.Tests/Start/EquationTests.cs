@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using Yord.Crack.Begin.Start;
 
-namespace Yord.Crack.Begin.Tests
+namespace Yord.Crack.Begin.Tests.Start
 {
     [TestFixture]
     public class EquationTests

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.DataStructures
 {
     public class SimpleList<T> : ICollection
     {

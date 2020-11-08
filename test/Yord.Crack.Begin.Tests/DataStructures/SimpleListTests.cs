@@ -1,6 +1,7 @@
 using NUnit.Framework;
+using Yord.Crack.Begin.DataStructures;
 
-namespace Yord.Crack.Begin.Tests
+namespace Yord.Crack.Begin.Tests.DataStructures
 {
     [TestFixture]
     public class SimpleListTests

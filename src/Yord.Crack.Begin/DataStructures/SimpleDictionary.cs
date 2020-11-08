@@ -1,6 +1,6 @@
 using System;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.DataStructures
 {
     //реализовать словарь на базе связных списков
     public class SimpleDictionary<TKey, TValue>

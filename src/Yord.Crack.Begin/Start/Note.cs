@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.Start
 {
     public class Note
     {

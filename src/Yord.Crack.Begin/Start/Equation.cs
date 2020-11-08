@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.Start
 {
     public class Equation
     {

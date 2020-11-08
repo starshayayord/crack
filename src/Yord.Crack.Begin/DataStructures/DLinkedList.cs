@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.DataStructures
 {
     public class DLinkedList<T> : IEnumerable<T>
     {

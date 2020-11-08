@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.DataStructures
 {
     public class SimpleArrayList : IEnumerable
     {
