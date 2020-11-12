@@ -9,18 +9,17 @@ namespace Yord.Crack.Begin.Tests.Chapter1
         [Test]
         public void Should_RotateMatrix_Successfully()
         {
-            
             var source = new[,]
             {
-                {1,2},
-                {3,4}
+                {1, 2},
+                {3, 4}
             };
 
             var rotated = Task7.Rotate(source);
-            Assert.AreEqual(source[0,0], rotated[1,0]);
-            Assert.AreEqual(source[0,1], rotated[1,1]);
-            Assert.AreEqual(source[1,0], rotated[0,0]);
-            Assert.AreEqual(source[1,1], rotated[0,1]);
+            Assert.AreEqual(source[0, 0], rotated[1, 0]);
+            Assert.AreEqual(source[0, 1], rotated[1, 1]);
+            Assert.AreEqual(source[1, 0], rotated[0, 0]);
+            Assert.AreEqual(source[1, 1], rotated[0, 1]);
         }
 
         [Test]

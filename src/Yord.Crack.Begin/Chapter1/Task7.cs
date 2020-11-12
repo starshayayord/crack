@@ -6,26 +6,31 @@ namespace Yord.Crack.Begin.Chapter1
     // Необходимо повернуть изображение на 90 градусов
     public class Task7
     {
-        //PERFECT
+        //PERFECT 
+        // меньше памяти,  N
         public static int[][] RotateClockwise(int[][] img)
         {
             var matrixSize = img.Length;
             for (var layer = 0; layer < matrixSize / 2; layer++)
             {
                 var endIndex = matrixSize - 1 - layer;
+                // индекс начинается со слоя
                 for (var elementIndex = layer; elementIndex < endIndex; elementIndex++)
                 {
-                    var topLeft = img[layer][elementIndex+layer]; //1
-                    img[layer][elementIndex+layer] = img[endIndex - elementIndex][layer]; // 13 -> 1
+                    // важно помнить, что Х и У в данном случае "перепутаны местами", т.к.
+                    // сначала обращение идет к главному массиву [] (координата Y),
+                    // а затем к внутреннему [][] (координата Х)
+                    var topElement = img[layer][elementIndex + layer]; // 1
+                    img[layer][elementIndex + layer] = img[endIndex - elementIndex][layer]; //13 -> 1
                     img[endIndex - elementIndex][layer] = img[endIndex][endIndex - elementIndex]; //16 -> 13
-                    img[endIndex][endIndex - elementIndex] = img[elementIndex+layer][endIndex];  // 4 -> 16
-                    img[elementIndex + layer][endIndex] = topLeft; // 4 -> 1
+                    img[endIndex][endIndex - elementIndex] = img[elementIndex + layer][endIndex]; // 4 -> 16
+                    img[elementIndex + layer][endIndex] = topElement;
                 }
             }
 
             return img;
         }
-        
+
 
         // память на доп массив, сложность N^2
         public static int[,] Rotate(int[,] img)
