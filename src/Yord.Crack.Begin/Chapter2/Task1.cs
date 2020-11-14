@@ -27,6 +27,36 @@ namespace Yord.Crack.Begin.Chapter2
                 n._next = new Node(v);
             }
 
+            public IEnumerator GetEnumerator()
+            {
+                return new Enumerator(this);
+            }
+
+            private struct Enumerator : IEnumerator
+            {
+                private Node _head;
+                private Node _current;
+
+                public Enumerator(Node head)
+                {
+                    _head = head;
+                    _current = null;
+                }
+
+                public bool MoveNext()
+                {
+                    _current = _current == null ? _head : _current._next;
+                    return _current != null;
+                }
+
+                public void Reset()
+                {
+                    _current = _head;
+                }
+
+                public object Current => _current._value;
+            }
+            
             //PERFECT, сложнее для понимания
             public static Node RemoveUnsortedDuplicates3(Node head)
             {
@@ -137,37 +167,6 @@ namespace Yord.Crack.Begin.Chapter2
                 }
 
                 return head;
-            }
-
-
-            public IEnumerator GetEnumerator()
-            {
-                return new Enumerator(this);
-            }
-
-            private struct Enumerator : IEnumerator
-            {
-                private Node _head;
-                private Node _current;
-
-                public Enumerator(Node head)
-                {
-                    _head = head;
-                    _current = null;
-                }
-
-                public bool MoveNext()
-                {
-                    _current = _current == null ? _head : _current._next;
-                    return _current != null;
-                }
-
-                public void Reset()
-                {
-                    _current = _head;
-                }
-
-                public object Current => _current._value;
             }
         }
     }
