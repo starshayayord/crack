@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 
 namespace Yord.Crack.Begin.Chapter2
 {
@@ -20,12 +19,55 @@ namespace Yord.Crack.Begin.Chapter2
                 _value = v;
             }
 
+            //PERFECT
+            // из книги, вроде мое решение ниже не хуже
+            public static Node SplitList2(Node head, int splitByValue)
+            {
+                Node less = null;
+                Node moreOrEqual = null;
+                var node = head;
+                while (node != null)
+                {
+                    var next = node._next;
+                    if (node._value < splitByValue)
+                    {
+                        node._next = less; //заменили последующие элементы уже имеющимся списком маленьких (или null)
+                        less = node; // новый список (с новым маленьким узлом впереди);
+                    }
+                    else
+                    {
+                        node._next =
+                            moreOrEqual; //заменили последующие элементы уже имеющимся списком больших (или null)
+                        moreOrEqual = node; // новый список (с новым большим узлом впереди);
+                    }
+
+                    node = next;
+                }
+
+                if (less == null) // не нашли ни одного элемента меньше разделителя
+                {
+                    return moreOrEqual;
+                }
+
+                head = less;
+                while (less._next != null) 
+                {
+                    less = less._next; // долистываем меньший список до последнего элемента
+                }
+
+                less._next = moreOrEqual; // крепим к последнему элементу меньшего больший список
+
+                return head;
+            }
+
+            
+            // мое решение, не вижу, чем оно хуже книжного
             public static Node SplitList(Node head, int splitByValue)
             {
                 var n = head;
                 var next = head._next;
                 //пока не дошли до конца
-                while (next!= null)
+                while (next != null)
                 {
                     //если меньший элемент слева, то просто смещаем оба указателя дальше
                     if (n._value < splitByValue)
@@ -46,6 +88,7 @@ namespace Yord.Crack.Begin.Chapter2
                         next = next._next;
                     }
                 }
+
                 return head;
             }
 
