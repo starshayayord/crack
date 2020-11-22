@@ -13,7 +13,7 @@ namespace Yord.Crack.Begin.Chapter3
         {
             private LinkedList<Cat> _cats;
             private LinkedList<Dog> _dogs;
-            private int order;
+            private int order; // можно использовать метку времени поступления животного
 
             public Shelter()
             {
@@ -79,7 +79,7 @@ namespace Yord.Crack.Begin.Chapter3
 
         public abstract class Animal
         {
-            public string Name { get; set; }
+            public string Name { get; }
 
             public int Order { get; set; }
 
