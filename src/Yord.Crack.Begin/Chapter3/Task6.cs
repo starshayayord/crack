@@ -1,4 +1,6 @@
-$HEADER$namespace $NAMESPACE$
+namespace Yord.Crack.Begin.Chapter3
 {
-  public class $CLASS$ {$END$}
+    public class Task6
+    {
+    }
 }
