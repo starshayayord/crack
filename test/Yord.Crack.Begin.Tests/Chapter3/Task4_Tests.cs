@@ -16,12 +16,12 @@ namespace Yord.Crack.Begin.Tests.Chapter3
             queue.Enqueue(3);
             
             Assert.IsFalse(queue.IsEmpty());
-            Assert.AreEqual(3, queue.Peek()); 
-            Assert.AreEqual(3, queue.Dequeue());
+            Assert.AreEqual(1, queue.Peek()); 
+            Assert.AreEqual(1, queue.Dequeue());
             Assert.AreEqual(2, queue.Dequeue());
             queue.Enqueue(4);
-            Assert.AreEqual(1, queue.Peek());
-            Assert.AreEqual(1, queue.Dequeue());
+            Assert.AreEqual(3, queue.Peek());
+            Assert.AreEqual(3, queue.Dequeue());
             Assert.AreEqual(4, queue.Dequeue());
             Assert.IsTrue(queue.IsEmpty());
         }
