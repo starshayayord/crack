@@ -8,12 +8,11 @@ namespace Yord.Crack.Begin.Tests.Chapter3
     [TestFixture]
     public class Task5_Tests
     {
-
         [Test]
         public void Should_SortStack_Successfully()
         {
             var array = new[] {12, 1, 8, 5, 8};
-            
+
             var sortedStack = Task5.Sort(Initialize(array));
 
             foreach (var a in array.OrderByDescending(i => i))
@@ -21,7 +20,7 @@ namespace Yord.Crack.Begin.Tests.Chapter3
                 Assert.AreEqual(a, sortedStack.Pop());
             }
         }
-        
+
         private Stack<int> Initialize(int[] array)
         {
             var stack = new Stack<int>();
