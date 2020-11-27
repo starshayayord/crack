@@ -7,13 +7,35 @@ namespace Yord.Crack.Begin.Tests.Chapter4
     public class Task3_Tests
     {
         [Test]
+        public void Should_ConvertTreeBfs_Successfully()
+        {
+            var t = GetTree();
+
+            var list = Task3.ConvertToListsBfs(t);
+
+            Assert.AreEqual(4, list.Count);
+        }
+
+        [Test]
+        public void Should_ConvertTreeDfs_Successfully()
+        {
+            var t = GetTree();
+
+            var list = Task3.ConvertToListsDfs(t);
+
+            Assert.AreEqual(4, list.Count);
+        }
+
+        [Test]
         public void Should_ConvertTree2_Successfully()
         {
             var t = GetTree();
 
             var list = Task3.ConvertToLists2(t);
+
+            Assert.AreEqual(4, list.Count);
         }
-        
+
         private Task3.BinaryTree GetTree()
         {
             var t = new Task3.BinaryTree

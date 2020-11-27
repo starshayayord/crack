@@ -7,6 +7,60 @@ namespace Yord.Crack.Begin.Chapter4
     // для дерева глубины D должно получиться D связных списков
     public class Task3
     {
+        //PERFECT (2)
+        // BFS, значит идем по уровням
+        //чтобы узнать узлы уровня N мы смотрим ДОЧЕРНИЕ узлы уровня N-1
+        public static List<LinkedList<BinaryTreeNode>> ConvertToListsBfs(BinaryTree tree)
+        {
+            var list = new List<LinkedList<BinaryTreeNode>>();
+            var currentLevelList = new LinkedList<BinaryTreeNode>();
+            if (tree.Root != null) currentLevelList.AddFirst(tree.Root);
+
+            while (currentLevelList.Any()) //пока есть узлы на текущем уровне
+            {
+                list.Add(currentLevelList); // добавили предыдущий 
+                var parents = currentLevelList; // запомнили его как родительский
+                currentLevelList = new LinkedList<BinaryTreeNode>(); // сделали чистый лист
+                foreach (var parent in parents) //добавили в чистый лист всех детей всех родителей
+                {
+                    if (parent.Left != null) currentLevelList.AddFirst(parent.Left);
+                    if (parent.Right != null) currentLevelList.AddFirst(parent.Right);
+                }
+            }
+
+            return list;
+        }
+
+        //PERFECT (1) на самом деле при подсчете узлов на уровне (DFS) можно было сразу добавлять в списки
+        public static List<LevelLinkedList> ConvertToListsDfs(BinaryTree tree)
+        {
+            if (tree.Root == null) return null;
+            var list = new List<LevelLinkedList>();
+            ConvertToLists(list, tree.Root, 0);
+            return list;
+        }
+
+        private static void ConvertToLists(List<LevelLinkedList> list, BinaryTreeNode node, int level)
+        {
+            LevelLinkedList levelList;
+            //уровни посещаются по порядку, т.е. при посещении N уровня в списке будет N-1 связных списков
+            if (list.Count == level) // уровень еще не содержится в списке
+            {
+                //добавим пустой связный список в конец 
+                levelList = new LevelLinkedList();
+                list.Add(levelList);
+            }
+            else
+            {
+                //возьмем существующий список уровня 
+                levelList = list[level];
+            }
+
+            levelList.Add(node.Value);
+            if (node.Left != null) ConvertToLists(list, node.Left, level + 1);
+            if (node.Right != null) ConvertToLists(list, node.Right, level + 1);
+        }
+
         public static List<LevelLinkedList> ConvertToLists2(BinaryTree tree)
         {
             // DFS, считаем кол-во узлов на каждом уровне
@@ -29,6 +83,7 @@ namespace Yord.Crack.Begin.Chapter4
                     list.Add(l);
                     l = new LevelLinkedList();
                 }
+
                 if (n.Left != null) queue.Enqueue(n.Left);
                 if (n.Right != null) queue.Enqueue(n.Right);
             }
