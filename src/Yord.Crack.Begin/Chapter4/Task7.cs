@@ -8,6 +8,7 @@ namespace Yord.Crack.Begin.Chapter4
     // вернуть правильный порядок построения проектов или null, если невозмножно
     public class Task7
     {
+        //PERFECT (менее понятный)
         public static Stack<char> GetOrderDfs(char[] projects, Tuple<char, char>[] deps)
         {
             var nodes = projects.ToDictionary(p => p, p => new Project());
@@ -19,10 +20,15 @@ namespace Yord.Crack.Begin.Chapter4
             }
 
             var stack = new Stack<char>();
+            //для случайного узла делаем поиск в глубину до проекта, от которого никто не зависит
+            //(то есть строим случайный узел)
+            //добавляем такой проект и все по цепочке
             foreach (var (pName, proj) in nodes)
             {
+                //если проект еще не трогали
                 if (proj.State == State.Blank)
                 {
+                    //пытаемся найти для него возможное построение рекурсивно
                     if (!DoDfs(nodes, pName, stack)) return null;
                 }
             }
@@ -30,24 +36,37 @@ namespace Yord.Crack.Begin.Chapter4
             return stack;
         }
 
+        // Добавляем сначала узлы, от которых НЕ ЗАВИСЯТ другие проекты (которые построить последними)
+        // потом добавляем текущий узел
+        // повторяем, пока не пройдем по всем узлам из графа (foreach в главной функции)
         private static bool DoDfs(Dictionary<char, Project> nodes, char pName, Stack<char> stack)
         {
+            // если в процессе рекурсии мы вернулись к какому-то узлу, который уже начал обрабатываться
+            // то циклическая зависимость
             if (nodes[pName].State == State.Partial) return false;
             if (nodes[pName].State == State.Blank)
             {
                 nodes[pName].State = State.Partial;
+                // повторяем для проектов, которые зависят от текущего
+                // пока у них не закончатся зависящие
+                // если у кого-то из зависящих нашлась циклическая зависимость, то выходим с ошибкой
                 foreach (var c in nodes[pName].Children)
                 {
                     if (!DoDfs(nodes, c, stack)) return false;
                 }
 
+                // если циклической зависимость не было, то помечаем текущий как построенный и добавляет в стек
                 nodes[pName].State = State.Complete;
+                // благодаря рекурсии самый "независимый" будет добавлен последним
                 stack.Push(pName);
             }
 
             return true;
         }
-        
+
+        // PERFECT 
+        // по логике равен GetOrder2, но без дополнительных затрат
+        // более понятный
         public static char?[] GetOrder(char[] projects, Tuple<char, char>[] deps)
         {
             var nodes = projects.ToDictionary(p => p, p => new Project());
@@ -93,7 +112,12 @@ namespace Yord.Crack.Begin.Chapter4
             public State State = State.Blank; //только для GetOrderDfs()
         }
 
-        private enum State {Blank, Partial, Complete}
+        private enum State
+        {
+            Blank,
+            Partial,
+            Complete
+        }
 
         private static int AddNonDependent(char?[] order, Dictionary<char, Project> projects, int offset,
             IEnumerable<char> checkProjects)
