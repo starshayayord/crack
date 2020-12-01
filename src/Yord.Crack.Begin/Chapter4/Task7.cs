@@ -8,6 +8,67 @@ namespace Yord.Crack.Begin.Chapter4
     // вернуть правильный порядок построения проектов или null, если невозмножно
     public class Task7
     {
+        public static char?[] GetOrder(char[] projects, Tuple<char, char>[] deps)
+        {
+            var nodes = projects.ToDictionary(p => p, p => new Project());
+            foreach (var (p, d) in deps)
+            {
+                nodes[p].Deps.Add(d);
+                nodes[p].DepsCount++;
+                nodes[d].Children.Add(p);
+            }
+
+            var order = new char?[projects.Length];
+            // добавили проект(ы) без зависимостей
+            var offset = AddNonDependent(order, nodes, 0, projects);
+            var toBeProcessed = 0;
+            //пока не запроцессили все проекты
+            while (toBeProcessed < order.Length)
+            {
+                var current = order[toBeProcessed];
+                // если текущий проект для обработки равен null, значит не смгли добавить его через AddNonDependent
+                // значит у него есть циклическая зависимость
+                if (current == null) return null;
+                //собрали проект, значит можно уменьшить кол-во проектов, необходимых для сборки его детей, на 1
+                // то есть на этот самый проект
+                var children = nodes[current.Value].Children;
+                foreach (var c in children)
+                {
+                    nodes[c].DepsCount--;
+                }
+
+                //добавим тех детей, у которых не осталось зависимтостей
+                offset = AddNonDependent(order, nodes, offset, children);
+                toBeProcessed++;
+            }
+
+            return order;
+        }
+
+        private class Project
+        {
+            public List<char> Deps = new List<char>(); // от кого зависит нода
+            public int DepsCount; // осталось собрать зависимостей для сборки текущей ноды
+            public List<char> Children = new List<char>(); // кто зависит от текущей ноды
+        }
+
+
+        private static int AddNonDependent(char?[] order, Dictionary<char, Project> projects, int offset,
+            IEnumerable<char> checkProjects)
+        {
+            foreach (var c in checkProjects)
+            {
+                var n = projects[c];
+                if (n.DepsCount == 0)
+                {
+                    order[offset] = c;
+                    offset++;
+                }
+            }
+
+            return offset;
+        }
+
         public static HashSet<char> GetOrder2(char[] projects, Tuple<char, char>[] deps)
         {
             var result = new HashSet<char>();
