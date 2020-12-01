@@ -8,6 +8,46 @@ namespace Yord.Crack.Begin.Chapter4
     // вернуть правильный порядок построения проектов или null, если невозмножно
     public class Task7
     {
+        public static Stack<char> GetOrderDfs(char[] projects, Tuple<char, char>[] deps)
+        {
+            var nodes = projects.ToDictionary(p => p, p => new Project());
+            foreach (var (p, d) in deps)
+            {
+                nodes[p].Deps.Add(d);
+                nodes[p].DepsCount++;
+                nodes[d].Children.Add(p);
+            }
+
+            var stack = new Stack<char>();
+            foreach (var (pName, proj) in nodes)
+            {
+                if (proj.State == State.Blank)
+                {
+                    if (!DoDfs(nodes, pName, stack)) return null;
+                }
+            }
+
+            return stack;
+        }
+
+        private static bool DoDfs(Dictionary<char, Project> nodes, char pName, Stack<char> stack)
+        {
+            if (nodes[pName].State == State.Partial) return false;
+            if (nodes[pName].State == State.Blank)
+            {
+                nodes[pName].State = State.Partial;
+                foreach (var c in nodes[pName].Children)
+                {
+                    if (!DoDfs(nodes, c, stack)) return false;
+                }
+
+                nodes[pName].State = State.Complete;
+                stack.Push(pName);
+            }
+
+            return true;
+        }
+        
         public static char?[] GetOrder(char[] projects, Tuple<char, char>[] deps)
         {
             var nodes = projects.ToDictionary(p => p, p => new Project());
@@ -50,8 +90,10 @@ namespace Yord.Crack.Begin.Chapter4
             public List<char> Deps = new List<char>(); // от кого зависит нода
             public int DepsCount; // осталось собрать зависимостей для сборки текущей ноды
             public List<char> Children = new List<char>(); // кто зависит от текущей ноды
+            public State State = State.Blank; //только для GetOrderDfs()
         }
 
+        private enum State {Blank, Partial, Complete}
 
         private static int AddNonDependent(char?[] order, Dictionary<char, Project> projects, int offset,
             IEnumerable<char> checkProjects)
