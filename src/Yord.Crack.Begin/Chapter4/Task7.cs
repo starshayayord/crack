@@ -14,7 +14,6 @@ namespace Yord.Crack.Begin.Chapter4
             var nodes = projects.ToDictionary(p => p, p => new Project());
             foreach (var (p, d) in deps)
             {
-                nodes[p].Deps.Add(d);
                 nodes[p].DepsCount++;
                 nodes[d].Children.Add(p);
             }
@@ -72,7 +71,6 @@ namespace Yord.Crack.Begin.Chapter4
             var nodes = projects.ToDictionary(p => p, p => new Project());
             foreach (var (p, d) in deps)
             {
-                nodes[p].Deps.Add(d);
                 nodes[p].DepsCount++;
                 nodes[d].Children.Add(p);
             }
@@ -106,7 +104,6 @@ namespace Yord.Crack.Begin.Chapter4
 
         private class Project
         {
-            public List<char> Deps = new List<char>(); // от кого зависит нода
             public int DepsCount; // осталось собрать зависимостей для сборки текущей ноды
             public List<char> Children = new List<char>(); // кто зависит от текущей ноды
             public State State = State.Blank; //только для GetOrderDfs()

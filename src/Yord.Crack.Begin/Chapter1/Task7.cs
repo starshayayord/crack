@@ -31,7 +31,6 @@ namespace Yord.Crack.Begin.Chapter1
             return img;
         }
 
-
         // память на доп массив, сложность N^2
         public static int[,] Rotate2(int[,] img)
         {
