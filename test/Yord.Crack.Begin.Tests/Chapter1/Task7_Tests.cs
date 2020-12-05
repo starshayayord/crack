@@ -15,7 +15,7 @@ namespace Yord.Crack.Begin.Tests.Chapter1
                 {3, 4}
             };
 
-            var rotated = Task7.Rotate(source);
+            var rotated = Task7.Rotate2(source);
             Assert.AreEqual(source[0, 0], rotated[1, 0]);
             Assert.AreEqual(source[0, 1], rotated[1, 1]);
             Assert.AreEqual(source[1, 0], rotated[0, 0]);
@@ -32,7 +32,7 @@ namespace Yord.Crack.Begin.Tests.Chapter1
                 new[] {9, 10, 11, 12},
                 new[] {13, 14, 15, 16},
             };
-            var rotated = Task7.RotateClockwise(source);
+            var rotated = Task7.Rotate(source);
             CollectionAssert.AreEqual(new[] {13, 9, 5, 1}, rotated[0]);
             CollectionAssert.AreEqual(new[] {14, 10, 6, 2}, rotated[1]);
             CollectionAssert.AreEqual(new[] {15, 11, 7, 3}, rotated[2]);
