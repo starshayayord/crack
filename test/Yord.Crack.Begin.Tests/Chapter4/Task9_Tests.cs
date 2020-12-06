@@ -13,18 +13,16 @@ namespace Yord.Crack.Begin.Tests.Chapter4
 
             var result = Task9.GetInitialArrays(tree);
             
-            Assert.AreEqual(2, result.Count);
-            CollectionAssert.AreEqual(new [] {2, 1, 3}, result[0]);
-            CollectionAssert.AreEqual(new [] {2, 3, 1}, result[1]);
+            Assert.AreEqual(80, result.Count);
         }
 
         private Task9.BSTNode GetTree()
         {
             return new Task9.BSTNode
             {
-                Value = 2,
-                Left = new Task9.BSTNode {Value = 1},
-                Right = new Task9.BSTNode {Value = 3}
+                Value = 4,
+                Left = new Task9.BSTNode {Value = 2, Left = new Task9.BSTNode {Value = 1}, Right = new Task9.BSTNode{Value = 3}},
+                Right = new Task9.BSTNode {Value = 6, Left = new Task9.BSTNode {Value = 5}, Right = new Task9.BSTNode{Value = 7}}
             };
         }
     }

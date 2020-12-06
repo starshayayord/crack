@@ -17,9 +17,12 @@ namespace Yord.Crack.Begin.Chapter4
             }
 
             var prefix = new LinkedList<int>();
+            //фиксируем текущую ноду (корень, т.к. она должна быть вставлена вперед)
             prefix.AddFirst(root.Value);
+            // получаем все возможные варианты исходных массивов, которые могли быть для левого и для правого поддерева
             var leftSeq = GetInitialArrays(root.Left);
             var rightSeq = GetInitialArrays(root.Right);
+            // перед префиксом миксуем все варианты для исходных массивов левого и правого поддеревьев
             foreach (var l in leftSeq)
             {
                 foreach (var r in rightSeq)
@@ -34,6 +37,8 @@ namespace Yord.Crack.Begin.Chapter4
         }
 
 
+        //объединим два списка всеми возможными способами
+        //получим все перестановки
         private static void WeaveLists(LinkedList<int> f, LinkedList<int> s, LinkedList<int> prefix,
             List<LinkedList<int>> results)
         {
@@ -53,7 +58,8 @@ namespace Yord.Crack.Begin.Chapter4
                 results.Add(result);
                 return;
             }
-
+ 
+            //последовательно фиксируем в префиксе первый массив
             var headF = f.First;
             f.RemoveFirst();
             prefix.AddLast(headF);
@@ -61,6 +67,7 @@ namespace Yord.Crack.Begin.Chapter4
             prefix.RemoveLast();
             f.AddFirst(headF);
 
+            //последовательно фиксируем в префиксе второй массив
             var headS = s.First;
             s.RemoveFirst();
             prefix.AddLast(headS);
