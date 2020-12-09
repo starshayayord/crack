@@ -64,6 +64,7 @@ namespace Yord.Crack.Begin.Chapter4
             f.RemoveFirst();
             prefix.AddLast(headF);
             WeaveLists(f, s, prefix, results);
+            //откат изменений
             prefix.RemoveLast();
             f.AddFirst(headF);
 
@@ -72,6 +73,7 @@ namespace Yord.Crack.Begin.Chapter4
             s.RemoveFirst();
             prefix.AddLast(headS);
             WeaveLists(f, s, prefix, results);
+            //откат изменений
             prefix.RemoveLast();
             s.AddFirst(headS);
         }
