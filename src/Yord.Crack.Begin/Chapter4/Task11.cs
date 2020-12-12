@@ -18,7 +18,7 @@ namespace Yord.Crack.Begin.Chapter4
             {
                 if (Root == null) return null;
                 var index = _random.Next(0, Size);
-                return Root.GetNth(index);
+                return Root.GetKth(index);
             }
 
             public void Insert(int value)
@@ -35,10 +35,13 @@ namespace Yord.Crack.Begin.Chapter4
                 return Root?.Find(value);
             }
 
-
-            public void Remove(int value, BSTNode n)
+            public void Remove(int value)
             {
-                
+                Remove(value, Root);
+            }
+
+            private void Remove(int value, BSTNode n)
+            {
                 var current = n;
                 var prevList = new List<BSTNode>();
                 while (current != null && current.Value != value)
@@ -52,9 +55,10 @@ namespace Yord.Crack.Begin.Chapter4
                 {
                     if (current == Root)
                     {
-                        Root =null;
+                        Root = null;
                         return;
                     }
+
                     if (prevList.Last().Left == current)
                     {
                         prevList.Last().Left = null;
@@ -74,6 +78,7 @@ namespace Yord.Crack.Begin.Chapter4
                             Root = notNullChild;
                             return;
                         }
+
                         if (prevList.Last().Left == current)
                         {
                             prevList.Last().Left = notNullChild;
@@ -85,19 +90,16 @@ namespace Yord.Crack.Begin.Chapter4
                     }
                     else
                     {
-                        var minRight = current.Right.GetMin();
-                        Remove(minRight.Value, current);
-                        current.Value = minRight.Value;
+                        var minRightValue = current.Right.GetMin();
+                        Remove(minRightValue, current);
+                        current.Value = minRightValue;
                     }
                 }
+
                 foreach (var p in prevList)
                 {
                     p.Size--;
                 }
-            }
-            public void Remove(int value)
-            {
-                Remove(value, Root);
             }
         }
 
@@ -114,9 +116,9 @@ namespace Yord.Crack.Begin.Chapter4
                 Size = 1;
             }
 
-            public BSTNode GetMin()
+            public int GetMin()
             {
-                return Left != null ? Left.GetMin() : this;
+                return Left?.GetMin() ?? Value;
             }
 
             public BSTNode Find(int value)
@@ -142,15 +144,15 @@ namespace Yord.Crack.Begin.Chapter4
             }
 
 
-            public BSTNode GetNth(int index)
+            public BSTNode GetKth(int k)
             {
                 var leftSize = Left?.Size ?? 0;
-                if (index < leftSize)
+                if (k < leftSize)
                 {
-                    return Left.GetNth(index);
+                    return Left.GetKth(k);
                 }
 
-                return index == leftSize ? this : Right.GetNth(index - (leftSize + 1));
+                return k == leftSize ? this : Right.GetKth(k - (leftSize + 1));
             }
         }
     }
