@@ -7,9 +7,17 @@ namespace Yord.Crack.Begin.Tests.Chapter4
     public class Task12_Tests
     {
         [Test]
-        public void Should()
+        public void Should_GetAllRoutesForNumber_Successfully()
         {
             var routes = Task12.GetAllRoutesForNumber(GetTree(), 8);
+            
+            Assert.AreEqual(3, routes);
+        }
+        
+        [Test]
+        public void Should_GetAllRoutesForNumber2_Successfully()
+        {
+            var routes = Task12.GetAllRoutesForNumber2(GetTree(), 8);
             
            Assert.AreEqual(3, routes);
         }
