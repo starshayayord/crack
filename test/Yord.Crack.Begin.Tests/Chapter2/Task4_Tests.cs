@@ -7,6 +7,36 @@ namespace Yord.Crack.Begin.Tests.Chapter2
     public class Task4_Tests
     {
         [Test]
+        public void Should_SplitList3_OnlyLeft()
+        {
+            var sourceList = GenerateList(new[] {4, 1});
+
+            var split = Task4.Node.SplitList3(sourceList, 5);
+
+            CollectionAssert.AreEqual(new[] {1, 4}, split);
+        }
+        
+        [Test]
+        public void Should_SplitList3_OnlyRight()
+        {
+            var sourceList = GenerateList(new[] {10,12,13});
+
+            var split = Task4.Node.SplitList3(sourceList, 5);
+
+            CollectionAssert.AreEqual(new[] {10, 12, 13}, split);
+        }
+        
+        [Test]
+        public void Should_SplitList3_Successfully()
+        {
+            var sourceList = GenerateList(new[] {3, 5, 8, 5, 10, 2, 1});
+
+            var split = Task4.Node.SplitList3(sourceList, 5);
+
+            CollectionAssert.AreEqual(new[] {1, 2, 3, 5, 8, 5, 10}, split);
+        }
+        
+        [Test]
         public void Should_SplitList2_Successfully()
         {
             var sourceList = GenerateList(new[] {3, 5, 8, 5, 10, 2, 1});

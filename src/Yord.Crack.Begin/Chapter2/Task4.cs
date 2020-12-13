@@ -18,8 +18,37 @@ namespace Yord.Crack.Begin.Chapter2
             {
                 _value = v;
             }
-
             //PERFECT
+            public static Node SplitList3(Node node, int splitByValue)
+            {
+                var head = node;
+                var tail = node;
+                while (node != null)
+                {
+                    var next = node._next;
+                    //по сути соединяем существующие элементы иначе
+                    //если меньше, то текущий элемент добавляем в начало списка
+                    if (node._value < splitByValue)
+                    {
+                        node._next = head;
+                        head = node;
+                    }
+                    //если больше, то к текущему месту хвоста добавляем соединение на новое место хвоста
+                    else
+                    {
+                        tail._next = node;
+                        tail = node;
+                    }
+
+                    node = next;
+                }
+
+                // если последнее место хвоста не равно концу списка, то эти элементы уже перемещены в начало списка,
+                // так что ссылку на них надо удалить (иначе tail._next и так null)
+                tail._next = null;
+                return head;
+            }
+
             // из книги, вроде мое решение ниже не хуже
             public static Node SplitList2(Node head, int splitByValue)
             {
