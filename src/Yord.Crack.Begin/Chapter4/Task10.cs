@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Yord.Crack.Begin.Chapter4
 {
     // T1 >> T2 проверить, является ли бинарное дерево T2 поддеревом бинарного дерева T1
