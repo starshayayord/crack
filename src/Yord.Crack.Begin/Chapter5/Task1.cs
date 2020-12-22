@@ -15,6 +15,12 @@ namespace Yord.Crack.Begin.Chapter5
 
             return n;
         }
+        
+        public static int Insert2(int n, int m, int i, int j)
+        {
+             m <<= i;
+             return n | m;
+        }
 
         private static int SetBit(int n, int i, int value)
         {

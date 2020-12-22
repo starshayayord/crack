@@ -11,5 +11,11 @@ namespace Yord.Crack.Begin.Tests.Chapter5
         {
             Assert.AreEqual(1100, Task1.Insert(1024, 19,2,6));
         }
+        
+        [Test]
+        public void Should_InsertMIntoN2_Successfully()
+        {
+            Assert.AreEqual(1100, Task1.Insert2(1024, 19,2,6));
+        }
     }
 }
