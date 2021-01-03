@@ -13,6 +13,7 @@ namespace Yord.Crack.Begin.Chapter5
         // если 1, то вычитаем добавленное
         public static string Convert(double value)
         {
+            if (value <= 0 || value >= 1) throw new ArgumentOutOfRangeException();
             var toCompare = 0.5;
             var sb = new StringBuilder("0.");
             while (value > 0)
