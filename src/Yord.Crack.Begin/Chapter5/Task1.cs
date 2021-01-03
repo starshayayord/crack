@@ -6,6 +6,16 @@ namespace Yord.Crack.Begin.Chapter5
     {
         public static int Insert(int n, int m, int i, int j)
         {
+            var allOnes = ~0;
+            var left = allOnes << (j + 1);
+            var right = (1 << i) - 1;
+            var mask = left | right;
+            n &= mask;
+            return n | (m << i);
+        }
+        
+        public static int Insert1(int n, int m, int i, int j)
+        {
             var mLen = j - i;
             for (var c = 0; c <= mLen; c++)
             {
