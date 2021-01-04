@@ -1,87 +1,70 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Yord.Crack.Begin.Chapter5
 {
     // найти самую длинную последовательность единиц, если в числе мб заменен только один 0.
     public class Task3
     {
+        private const int BitsInByte = 8;
         public static int GetMaxSequence(int num)
         {
-            var str = Convert.ToString(num, 2);
+            var sequences = GetSequences(num);
+            return GetMaxOnesSequence(sequences);
+        }
+        
+        // получаем последовательность повторений
+        // последовательность начинается с кол-ва нулей, далее чередуется
+        // 11011101111 => [0, 4, 1, 3, 1, 2, 21], т.к. 32 бита и считаем слева, постепенно сдвигая
+        private static List<int> GetSequences(int n)
+        {
+            var t = Convert.ToString(n, 2);
+            var searchFor = 0;
             var counter = 0;
-            var currentCounter = str.First();
-            var seqList = new List<Tuple<char, int>>();
-            foreach (var c in str)
+            var sequences = new List<int>();
+            for (var i = 0; i < sizeof(int) * BitsInByte; i++)
             {
-                if (c != currentCounter)
+                var currentBit = n & 1;
+                if (currentBit != searchFor)
                 {
-                    seqList.Add(new Tuple<char, int>(currentCounter, counter));
-                    currentCounter = c;
-                    counter = 1;
+                    sequences.Add(counter);
+                    searchFor = currentBit;
+                    counter = 0;
                 }
-                else
-                {
-                    counter++;
-                }
+
+                counter++;
+                n >>= 1;
             }
-            seqList.Add(new Tuple<char, int>(currentCounter, counter));
-            var maxSeq = 0;
-            for (var i = 0; i < seqList.Count; i++)
+            sequences.Add(counter);
+            return sequences;
+        }
+
+        // прыгаем по кол-вам нулей и пытаемся прибавить кол-во единиц слева и/или справа, если возможно
+        private static int GetMaxOnesSequence(List<int> sequences)
+        {
+            var maxSeq = 1; //  как минимум 1 ноль мы можем заменить на 1
+            for (var i = 0; i < sequences.Count; i += 2)
             {
-                if (seqList[i].Item1 != '1')
+                var tempMaxSeq = 0;
+                var zerosCount = sequences[i];
+                var onesOnRight = i - 1 >= 0 ? sequences[i - 1] : 0;
+                var onesOnLeft = i + 1 < sequences.Count ? sequences[i +1 ] : 0;
+                if (zerosCount == 1)
                 {
-                    continue;
+                    tempMaxSeq = onesOnRight + 1 + onesOnLeft;
                 }
 
-                var tempMax = seqList[i].Item2;
-                //checkLeft
-                var leftIndex = i - 1;
-                if (leftIndex > 0)
+                if (zerosCount > 1)
                 {
-                    if (seqList[leftIndex].Item2 > 1)
-                    {
-                        tempMax++;//поменяли один ноль слева
-                    }
-                    else
-                    {
-                        tempMax++;//поменяли один ноль слева
-                        if (leftIndex - 1 >= 0)
-                        {
-                            tempMax += seqList[leftIndex - 1].Item2;  // учли длину слева от 1 нуля
-                        }
-                    }
+                    tempMaxSeq = 1 + Math.Max(onesOnRight, onesOnLeft);
                 }
 
-                if (tempMax > maxSeq)
+                if (zerosCount == 0)
                 {
-                    maxSeq = tempMax;
-                }
-                
-                //checkright
-                tempMax =  seqList[i].Item2;
-                var rightIndex = i + 1;
-                if (rightIndex < seqList.Count)
-                {
-                    if (seqList[rightIndex].Item2 > 1)
-                    {
-                        tempMax++;//поменяли один ноль справа
-                    }
-                    else
-                    {
-                        tempMax++;//поменяли один ноль справа
-                        if (rightIndex + 1  < seqList.Count)
-                        {
-                            tempMax += seqList[rightIndex + 1].Item2;  // учли длину справа от 1 нуля
-                        }
-                    }
+                    tempMaxSeq = Math.Max(onesOnRight, onesOnLeft);
                 }
 
-                if (tempMax > maxSeq)
-                {
-                    maxSeq = tempMax;
-                }
+                maxSeq = Math.Max(tempMaxSeq, maxSeq);
             }
 
             return maxSeq;
