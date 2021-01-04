@@ -12,5 +12,12 @@ namespace Yord.Crack.Begin.Tests.Chapter5
             Assert.AreEqual(8, Task3.GetMaxSequence(1775));
             Assert.AreEqual(32, Task3.GetMaxSequence(-1));
         }
+        
+        [Test]
+        public void Should_GetMaxSequence2()
+        {
+            Assert.AreEqual(8, Task3.GetMaxSequence2(1775));
+            Assert.AreEqual(32, Task3.GetMaxSequence2(-1));
+        }
     }
 }
