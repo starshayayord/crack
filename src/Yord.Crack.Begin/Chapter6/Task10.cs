@@ -16,11 +16,11 @@ namespace Yord.Crack.Begin.Chapter6
         private static readonly Random Random = new Random();
         private readonly List<Strip> _testStrips;
         private readonly List<Bottle> _bottles;
-        public int PoisonedBottleNumber;
+        public int PoisonedBottleNumber { get; }
 
         private class Strip
         {
-            public bool IsPositive;
+            public bool IsPositive { get; private set; }
 
             public void Drip(Bottle bottle)
             {
@@ -33,9 +33,14 @@ namespace Yord.Crack.Begin.Chapter6
 
         private class Bottle
         {
-            public int Number { get; set; }
+            public Bottle(int number, bool isPoisoned)
+            {
+                Number = number;
+                IsPoisoned = isPoisoned;
+            }
+            public int Number { get;  }
 
-            public bool IsPoisoned { get; set; }
+            public bool IsPoisoned { get; }
         }
 
         public Task10()
@@ -60,11 +65,7 @@ namespace Yord.Crack.Begin.Chapter6
                 var bottles = new List<Bottle>();
                 for (var i = 0; i < BottlesCount; i++)
                 {
-                    bottles.Add(new Bottle
-                    {
-                        Number = i + 1,
-                        IsPoisoned = i + 1 == PoisonedBottleNumber
-                    });
+                    bottles.Add(new Bottle(i + 1, i + 1 == PoisonedBottleNumber));
                 }
 
                 return bottles;
