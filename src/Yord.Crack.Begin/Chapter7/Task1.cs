@@ -79,9 +79,11 @@ namespace Yord.Crack.Begin.Chapter7
 
             public int Score()
             {
+                var scores = GetPossibleScores();
+                if (scores.Count == 0) return 0;
                 var minOver = int.MaxValue;
                 var maxUnder = 0;
-                foreach (var score in GetPossibleScores())
+                foreach (var score in scores)
                 {
                     if (score > MaxBJScore)
                     {
