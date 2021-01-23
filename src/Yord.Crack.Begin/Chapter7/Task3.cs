@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks.Sources;
 
 namespace Yord.Crack.Begin.Chapter7
 {
@@ -39,7 +40,7 @@ namespace Yord.Crack.Begin.Chapter7
                 _ts = ts;
             }
 
-            public Song CurrentSong => _ts.GetCurrentSong();
+            public Song CurrentSong => _ts.CurrentSong;
 
             public void SetUser(User u)
             {
@@ -96,7 +97,8 @@ namespace Yord.Crack.Begin.Chapter7
 
             public Playlist(Song s, Queue<Song> queue)
             {
-                //...
+                _song = s;
+                _queue = queue;
             }
 
             public Song GetNextToPlay()
@@ -112,25 +114,36 @@ namespace Yord.Crack.Begin.Chapter7
 
         public class User
         {
-            private long Id { get; }
+            public long Id { get; }
+            public string Name { get; }
 
-            public User(long id)
+            public User(long id, string name)
             {
                 Id = id;
+                Name = name;
             }
+            
+            
         }
 
         public class SongSelector
         {
-            public Song GetCurrentSong()
+            public Song CurrentSong { get; private set; }
+            public void SetCurrentSong(Song s)
             {
-                throw new System.NotImplementedException();
+                CurrentSong = s;
             }
         }
 
         // идентификатор, cd, название, длина...
         public class Song
         {
+            public string Name { get; }
+
+            public Song(string name)
+            {
+                Name = name;
+            }
         }
     }
 }
