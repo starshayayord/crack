@@ -23,10 +23,46 @@ namespace Yord.Crack.Begin.Chapter7
             private List<List<Employee>> _employeeLevels; // [0] - операторы, [1]-менеджеры, [2] - директоры
             private List<List<Call>> _callsQueue; // очередь для каждого вызова
 
+            public CallHandler()
+            {
+                _employeeLevels =new List<List<Employee>>(Levels);
+                _callsQueue = new List<List<Call>>(Levels);
+                var respondents = new List<Employee>(RespondentsCount);
+                for (var i = 0; i < RespondentsCount; i++)
+                {
+                    respondents.Add(new Responder(this));
+                }
+                _employeeLevels.Add(respondents);
+                
+                var managers = new List<Employee>(ManagersCount);
+                for (var i = 0; i < ManagersCount; i++)
+                {
+                    managers.Add(new Manager(this));
+                }
+                _employeeLevels.Add(managers);
+                
+                var directors = new List<Employee>(DirectorsCount);
+                for (var i = 0; i < DirectorsCount; i++)
+                {
+                    directors.Add(new Director(this));
+                }
+                _employeeLevels.Add(directors);
+            }
             // получение первого доступного работника для обработк звонка
             public Employee GetHandlerForCall(Call call)
             {
-                throw new NotImplementedException();
+                for (var l = (int)call.Rank; l < Levels - 1; l++)
+                {
+                    foreach (var e in _employeeLevels[l])
+                    {
+                        if (e.IsFree)
+                        {
+                            return e;
+                        }
+                    }
+                }
+
+                return null;
             }
 
             // Перенаправить звонок первому доступному работнику или положить в очередь при отсутствии.
@@ -39,7 +75,7 @@ namespace Yord.Crack.Begin.Chapter7
             public void DispatchCall(Call call)
             {
                 var employee = GetHandlerForCall(call);
-                if (employee == null)
+                if (employee != null)
                 {
                     employee.ReceiveCall(call);
                     call.SetHandler(employee);
@@ -54,7 +90,19 @@ namespace Yord.Crack.Begin.Chapter7
             // Работник освободился. Если ему был назначен звонок, то вернуть  true, иначе false
             public bool AssignCall(Employee employee)
             {
-                throw new NotImplementedException();
+                for (var r = (int) employee.GetRank; r >= 0; r--)
+                {
+                    var queueForRank = _callsQueue[r];
+                    if (_callsQueue.Count > 0)
+                    {
+                        var call = queueForRank[0];
+                        queueForRank.RemoveAt(0);
+                        employee.ReceiveCall(call);
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -62,31 +110,48 @@ namespace Yord.Crack.Begin.Chapter7
         {
             private Call _currentCall;
             protected Rank Rank { get; set; }
+            private CallHandler _callHandler;
 
-            public Employee()
+            public Employee(CallHandler callHandler)
             {
+                _callHandler = callHandler;
             }
 
             // начало обработки
             public void ReceiveCall(Call call)
             {
-                throw new NotImplementedException();
+                _currentCall = call;
             }
 
             // проблема решена
             public void CallCompleted()
             {
+                if (_currentCall != null)
+                {
+                    _currentCall.Disconnect();
+                    _currentCall = null;
+                }
+
+                AssignNewCall();
             }
 
             // проблема осталась, передаем звонок выше, назначаем нового работника
             public void EscalateAndReassign()
             {
+                if (_currentCall != null)
+                {
+                    _currentCall.IncrementRank();
+                    _callHandler.DispatchCall(_currentCall);
+                    _currentCall = null;
+                }
+                AssignNewCall();
             }
 
             // Назначить вызов работнику, если он свободен
             public bool AssignNewCall()
             {
-                throw new NotImplementedException();
+                if (!IsFree) return false;
+                return _callHandler.AssignCall(this);
             }
 
             public bool IsFree => _currentCall == null;
@@ -96,7 +161,7 @@ namespace Yord.Crack.Begin.Chapter7
 
         public class Director : Employee
         {
-            public Director()
+            public Director(CallHandler callHandler) : base(callHandler)
             {
                 Rank = Rank.Director;
             }
@@ -104,7 +169,7 @@ namespace Yord.Crack.Begin.Chapter7
 
         public class Manager : Employee
         {
-            public Manager(CallHandler handler) 
+            public Manager(CallHandler callHandler) : base(callHandler) 
             {
                 Rank = Rank.Manager;
             }
@@ -112,7 +177,7 @@ namespace Yord.Crack.Begin.Chapter7
 
         public class Responder : Employee
         {
-            public Responder(CallHandler handler) 
+            public Responder(CallHandler callHandler) : base(callHandler)
             {
                 Rank = Rank.Responder;
             }
@@ -142,13 +207,8 @@ namespace Yord.Crack.Begin.Chapter7
                 Employee = employee;
             }
 
-            public void IncrementRank()
+            public Rank IncrementRank()
             {
-                if (Rank.Equals(Rank.Director))
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-
                 if (Rank.Equals(Rank.Manager))
                 {
                     Rank = Rank.Director;
@@ -158,6 +218,8 @@ namespace Yord.Crack.Begin.Chapter7
                 {
                     Rank = Rank.Manager;
                 }
+
+                return Rank;
             }
 
             public void Reply(string message)
@@ -166,6 +228,7 @@ namespace Yord.Crack.Begin.Chapter7
 
             public void Disconnect()
             {
+                Reply("Thank you for your call");
             }
         }
 

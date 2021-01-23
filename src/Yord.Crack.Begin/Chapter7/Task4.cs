@@ -140,6 +140,7 @@ namespace Yord.Crack.Begin.Chapter7
 
                     var row = i / SpotsPerRow;
                     var spot = new ParkingSpot(size, row, i, this);
+                    _spots[i] = spot;
                 }
 
                 AvailableSpots = spotsNumber;
