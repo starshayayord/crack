@@ -25,6 +25,7 @@ namespace Yord.Crack.Begin.Chapter7
 
             public OnlineReaderSystem()
             {
+                // каждая система выносится отдельно, чтоб не переусложнять основную программу
                 _userManager = new UserManager();
                 _library = new Library();
                 _display = new Display();
