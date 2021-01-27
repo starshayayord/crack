@@ -122,7 +122,7 @@ namespace Yord.Crack.Begin.Chapter7
 
             private bool FitNextEdge(LinkedList<Piece> piecesToSearch, int row, int column)
             {
-                if (row == 00 && column == 0)
+                if (row == 0 && column == 0)
                 {
                     var p = piecesToSearch.First.Value;
                     piecesToSearch.RemoveFirst();
