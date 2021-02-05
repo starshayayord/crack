@@ -43,6 +43,7 @@ namespace Yord.Crack.Begin.Chapter2
             {
                 return new Enumerator(this);
             }
+            
 
             private struct Enumerator : IEnumerator
             {

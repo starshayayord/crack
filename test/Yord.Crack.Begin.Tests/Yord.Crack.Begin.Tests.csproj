@@ -16,8 +16,4 @@
       <ProjectReference Include="..\..\src\Yord.Crack.Begin\Yord.Crack.Begin.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Chapter7" />
-    </ItemGroup>
-
 </Project>
