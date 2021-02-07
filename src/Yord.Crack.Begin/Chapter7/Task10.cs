@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Yord.Crack.Begin.Chapter7
 {
@@ -12,250 +13,320 @@ namespace Yord.Crack.Begin.Chapter7
     // Игрок может помечать ячейки как потенциальные мины
     public class Task10
     {
+        public enum GameState
+        {
+            Won,
+            Lost,
+            Running
+        }
+        
         public class Game
         {
-            public enum GameState
-            {
-                Won,
-                Lost,
-                Running
-            }
-
+            private int _nRows;
+            private int _nColumns;
+            private int _nBombs;
             private Board _board;
-            private readonly int _rows;
-            private readonly int _columns;
-            private readonly int _bombs;
-            private GameState _state;
+            private GameState _gameState;
 
-            public GameState State => _state;
+            public GameState GameState => _gameState;
+            public int Unexposed => _board.Unexposed;
 
-            public Game(int r, int c, int b)
+            public Game(int nRows, int nColumns, int nBombs)
             {
-                _rows = r;
-                _columns = c;
-                _bombs = b;
-                _state = GameState.Running;
+                _nRows = nRows;
+                _nColumns = nColumns;
+                _nBombs = nBombs;
+                _gameState = GameState.Running;
             }
 
             public void Start()
             {
-                _board ??= new Board(_rows, _columns, _bombs);
+                _board ??= new Board(_nRows, _nColumns, _nBombs);
+                PrintGameState();
             }
-            
-            public void Turn(UserPlay play)
+
+            public void Play()
             {
-                var turnResult = _board.PlayFlip(play);
-                if (turnResult.IsSuccessfulMove)
+                while (_gameState == GameState.Running)
                 {
-                    _state = turnResult.ResultingState;
+                    var input = Console.ReadLine();
+                    var turn = Turn.Parse(input);
+                    if (turn == null)
+                    {
+                        continue;
+                    }
+
+                    var r = _board.Play(turn);
+                    if (r.IsSuccessfulMove)
+                    {
+                        _gameState = r.State;
+                        PrintGameState();
+                    }
                 }
+            }
+
+            // тестовый метод. возвращает true, если бомба
+            public bool Play(string input)
+            {
+                var turn = Turn.Parse(input);
+                if (turn == null)
+                {
+                    return false;
+                }
+
+                var r = _board.Play(turn);
+                if (r.IsSuccessfulMove)
+                {
+                    _gameState = r.State;
+                    PrintGameState();
+                    if (_gameState == GameState.Lost)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            private void PrintGameState()
+            {
+                Console.WriteLine($"STATE: {_gameState}");
+                _board.Print();
+                Console.WriteLine("_____________________________");
             }
         }
 
         public class Board
         {
-            private readonly int _nRows;
-            private readonly int _nColumns;
-            private readonly int _nBombs;
+            private int _nRows;
+            private int _nColumns;
+            private int _nBombs;
             private Cell[][] _cells;
             private Cell[] _bombs;
-            private int _numExposedRemaining;
+            private int _nUnexposed;
 
-            private readonly int[][] _deltas =
-            {
-                new[] {-1, -1}, new[] {-1, 0}, new[] {-1, 1},
-                new[] {0, -1}, new[] {0, 1},
-                new[] {1, -1}, new[] {1, 0}, new[] {1, 1}
+            public int Unexposed => _nUnexposed;
+
+            private readonly int[][] _deltas = { // 8 окружающих клеток
+                new[] {-1, -1}, new[]{-1, 0}, new[]{-1, 1},
+                new[]{ 0, -1},                new[]{ 0, 1},
+                new[]{ 1, -1},  new[]{ 1, 0}, new[]{ 1, 1}
             };
 
-            public Board(int r, int c, int b)
+            public Board(int nRows, int nColumns, int nBombs)
             {
-                _nRows = r;
-                _nColumns = c;
-                _nBombs = b;
-                InitializeBoard();
-                ShuffleBoard();
-                SetNumberedCells();
-                _numExposedRemaining = r * c - b;
+                _nRows = nRows;
+                _nColumns = nColumns;
+                _nBombs = nBombs;
+                _nUnexposed = nRows * nColumns - nBombs;
+                Initialize();
+                Shuffle();
+                SetNumbers();
             }
 
-            public UserPlayResult PlayFlip(UserPlay play)
-            {
-                var cell = GetCell(play);
-                if (cell == null) // за границами
-                {
-                    return new UserPlayResult(false, Game.GameState.Running);
-                }
-
-                if (play.IsGuess)
-                {
-                    cell.ToggleGuess();
-                    return new UserPlayResult(true, Game.GameState.Running);
-                }
-
-                var flipResult = FlipCell(cell);
-                if (cell.IsBomb)
-                {
-                    return new UserPlayResult(flipResult, Game.GameState.Lost);
-                }
-
-                if (cell.IsBlank)
-                {
-                    ExpandBlank(cell);
-                }
-
-                return _numExposedRemaining == 0
-                    ? new UserPlayResult(flipResult, Game.GameState.Won)
-                    : new UserPlayResult(flipResult, Game.GameState.Running);
-            }
-            
-            private void ExpandBlank(Cell cell)
-            {
-                //  рядом с пустой ячейкой находятся либо пустые, либо с номерами, то точно не с бомбами
-                var toExplore = new Queue<Cell>();
-                toExplore.Enqueue(cell);
-                while (toExplore.Any())
-                {
-                    // саму эту ячейку уже флипнули и поняли, что пустая
-                    var currentCell = toExplore.Dequeue();
-                    foreach (var delta in _deltas)
-                    {
-                        var r = currentCell.Row + delta[0];
-                        var c = currentCell.Column + delta[1];
-                        if (IsInBounds(r, c))
-                        {
-                            var neighbour = _cells[r][c];
-                            if (FlipCell(neighbour) && neighbour.IsBlank)
-                            {
-                                toExplore.Enqueue(neighbour);
-                            }
-                        }
-                    }
-                }
-            }
-
-            private Cell GetCell(UserPlay play)
-            {
-                return IsInBounds(play.Row, play.Column) ? _cells[play.Row][play.Column] : null;
-            }
-            
-            private void InitializeBoard()
+            // сначала расположим бомбы подряд
+            private void Initialize()
             {
                 _cells = new Cell[_nRows][];
                 _bombs = new Cell[_nBombs];
-                var bCounter = _nBombs;
+                var bombCounter = 0;
                 for (var r = 0; r < _nRows; r++)
                 {
                     _cells[r] = new Cell[_nColumns];
                     for (var c = 0; c < _nColumns; c++)
                     {
-                        // чтобы много раз не попадать на бомбы при генерации случайного места под бомбу,
-                        // расставим их подряд, а потом перемешаем игроеов поле
-                        if (bCounter > 0)
+                        var isBomb = bombCounter < _nBombs;
+                        var cell = new Cell(r, c, isBomb);
+                        if (isBomb)
                         {
-                            var bomb = new Cell(r, c, isBomb: true);
-                            _bombs[bCounter - _bombs.Length] = bomb;
-                            _cells[r][c] = bomb;
-                            bCounter--;
+                            _bombs[bombCounter] = cell;
+                            bombCounter++;
                         }
-                        else
-                        {
-                            _cells[r][c] = new Cell(r, c);
-                        }
+
+                        _cells[r][c] = cell;
                     }
                 }
             }
-
-            // Случайная расстановка: перебираем ячейки от 0 до N-1;
-            // Для каждого индекса выбирается случайный и элементы меняются местами
-            private void ShuffleBoard()
+            
+            //затем перемешаем бомбы
+            private void Shuffle()
             {
-                var nCells = _nColumns * _nRows;
                 var random = new Random();
+                var nCells = _nRows * _nColumns;
                 for (var index1 = 0; index1 < nCells; index1++)
                 {
                     var index2 = index1 + random.Next(nCells - index1);
-                    if (index1 == index2) continue; // не меняем ячейку саму с собой
-                    var r1 = index1 / _nColumns;
-                    var c1 = (index1 - r1 * _nColumns) % _nColumns;
-                    var cell1 = _cells[r1][c1];
-                    var r2 = index2 / _nColumns;
-                    var c2 = (index2 - r2 * _nColumns) % _nColumns;
-                    var cell2 = _cells[r2][c2];
-
-                    cell2.SetRowColumn(r1, c1);
-                    _cells[r1][c1] = cell2;
-                    cell1.SetRowColumn(r2, c2);
-                    _cells[r2][c2] = cell1;
-                }
-            }
-
-            // проще перебрать все бомбы, и инкрементить значения в окружающих ячейках, чем перебирать все ячейки
-            private void SetNumberedCells()
-            {
-                foreach (var b in _bombs)
-                {
-                    var rb = b.Row;
-                    var cb = b.Column;
-                    foreach (var delta in _deltas)
+                    if (index1 != index2)
                     {
-                        var r = rb + delta[0];
-                        var c = cb + delta[1];
-                        if (IsInBounds(r, c) && !_cells[r][c].IsBomb)
+                        var r1 = index1 / _nColumns;
+                        var c1 = (index1 - r1 * _nColumns) % _nColumns;
+                        var cell1 = _cells[r1][c1];
+                        
+                        var r2 = index2 / _nColumns;
+                        var c2 = (index2 - r1 * _nColumns) % _nColumns;
+                        var cell2 = _cells[r2][c2];
+                        
+                        cell1.SetRowColumn(r2, c2);
+                        _cells[r2][c2] = cell2;
+                        cell2.SetRowColumn(r1, c1);
+                        _cells[r1][c1] = cell2;
+                    }
+                }
+                    
+            }
+            
+            //установим цифры на клетки рядом с бомбами
+            private void SetNumbers()
+            {
+                foreach (var bomb in _bombs)
+                {
+                    foreach (var d in _deltas)
+                    {
+                        var r = bomb.Row + d[0];
+                        var c = bomb.Column + d[1];
+                        if (IsInBounds(r, c))
                         {
                             _cells[r][c].IncrementNumber();
                         }
                     }
                 }
             }
-
-            private bool IsInBounds(int r, int c)
+            
+            private bool IsInBounds(int row, int column)
             {
-                return r > 0 && r < _nRows && c > 0 && c < _nColumns;
+                return row >= 0 && row < _nRows && column >= 0 && column < _nColumns;
             }
 
-            // true, если успешно перевернули
-            private bool FlipCell(Cell cell)
+            public TurnResult Play(Turn turn)
+            {
+                var cell = GetCell(turn);
+                if (cell == null) return new TurnResult(GameState.Running, false);
+                if (turn.IsGuess)
+                {
+                    cell.ToggleGuess();
+                    return new TurnResult(GameState.Running, true);
+                }
+                if (!TryFlipCell(cell)) return new TurnResult(GameState.Running, false);
+                if(cell.IsBomb) return new TurnResult(GameState.Lost, true);
+                if (cell.IsBlank)
+                {
+                    ExposeBlank(cell);
+                }
+                return new TurnResult(_nUnexposed == 0? GameState.Won : GameState.Running, true);
+            }
+
+            private void ExposeBlank(Cell cell)
+            {
+                var toExplore = new Queue<Cell>();
+                toExplore.Enqueue(cell);// уже перевернули ранее в TryFlipCell, она пустая
+                while (toExplore.Any())
+                {
+                    var currentCell = toExplore.Dequeue();// уже перевернутая ранее
+                    foreach (var d in _deltas) // рекурсивно проверяем соседей на пустоту и переворачиваем
+                    {
+                        var r = currentCell.Row + d[0];
+                        var c = currentCell.Column + d[1];
+                        if (IsInBounds(r, c))
+                        {
+                            var neighbour = _cells[r][c];
+                            if (TryFlipCell(neighbour) && neighbour.IsBlank) // перевернули соседа 
+                            {
+                                toExplore.Enqueue(neighbour); //  если пустой, то проверить соседние
+                            }
+                        }
+                    }
+                }
+            }
+
+            private bool TryFlipCell(Cell cell)
             {
                 if (cell.IsExposed || cell.IsGuess) return false;
                 cell.Flip();
-                _numExposedRemaining--;
+                if (!cell.IsBomb)
+                {
+                    _nUnexposed--;
+                }
+
                 return true;
             }
-        }
 
+            private Cell GetCell(Turn turn)
+            {
+                return !IsInBounds(turn.Row, turn.Row) ? null : _cells[turn.Row][turn.Column];
+            }
+
+            public void Print()
+            {
+                Console.WriteLine("   ");
+                for (var c = 0; c < _nColumns; c++) 
+                {
+                    Console.Write(c + " ");
+                }
+
+                Console.WriteLine();
+                for (var c = 0; c < _nColumns; c++) 
+                {
+                    Console.Write("--");
+                }		
+                Console.WriteLine();
+                for (var r = 0; r < _nRows; r++) {
+                    Console.Write(r + "| ");
+                    for (var c = 0; c < _nColumns; c++) {
+                            Console.Write(_cells[r][c].Print());
+                    }
+                    Console.WriteLine();
+                }
+            }
+        }
 
         public class Cell
         {
             private int _row;
             private int _column;
-            private readonly bool _isBomb;
-            private int _number; // кол-во бомб в соседних 8 ячейках. Пустышка 0, бомба -1. Можно использовать enum.
-            private bool _isExposed; // признак открытости
-            private bool _isGuess; // признак пометки игроком
+            private int _number;
+            private bool _isGuess;
+            private bool _isBomb;
+            private bool _isExposed;
 
-            public Cell(int r, int c, bool isBomb = false)
+            public Cell(int row, int column, bool isBomb)
             {
-                _row = r;
-                _column = c;
+                _row = row;
+                _column = column;
                 if (isBomb)
                 {
                     _isBomb = true;
                     _number = -1;
                 }
+                
             }
-            
-            public void Flip()
-            {
-                _isExposed = true;
-            }
-            
+
             public void ToggleGuess()
             {
-                if (!_isExposed)
-                {
-                    _isGuess = !_isGuess;
-                }
+                _isGuess = !_isGuess;
+            }
+
+            public bool Flip()
+            {
+                _isExposed = true;
+                return _isBomb;
+            }
+            
+            public int Row => _row;
+
+            public int Column => _column;
+
+            public bool IsBlank => _number == 0;
+
+            public bool IsBomb => _isBomb;
+
+            public bool IsGuess => _isGuess;
+
+            public bool IsExposed => _isExposed;
+
+            public void SetRowColumn(int r, int c)
+            {
+                _row = r;
+                _column = c;
             }
 
             public void IncrementNumber()
@@ -263,37 +334,44 @@ namespace Yord.Crack.Begin.Chapter7
                 _number++;
             }
 
-            public bool IsExposed => _isExposed;
-
-            public bool IsGuess => _isGuess;
-
-            public bool IsBomb => _isBomb;
-
-            public bool IsBlank => _number == 0;
-
-            public int Row => _row;
-
-            public int Column => _column;
-
-            public void SetRowColumn(int r, int c)
+            public string Print()
             {
-                _row = r;
-                _column = c;
+                if (!_isExposed) return _isGuess ? "B" : "?";
+                if (_isBomb) return "*";
+                return IsBlank ? " " : $"{_number.ToString()}";
+
             }
         }
 
-        // ход пользователя
-        public class UserPlay
+        public class Turn
         {
             private int _row;
             private int _column;
             private bool _isGuess;
 
-            public UserPlay(int r, int c, bool isGuess)
+            private Turn(int row, int column, bool isGuess)
             {
-                _row = r;
-                _column = c;
+                _row = row;
+                _column = column;
                 _isGuess = isGuess;
+            }
+
+            public static Turn Parse(string input)
+            {
+                if (string.IsNullOrEmpty(input)) return null;
+                var guess = false;
+                if (input[0] == 'B')
+                {
+                    guess = true;
+                    input = input.Substring(1);
+                }
+                var parts = input.Split(" ");
+                if (parts.Length == 2 && int.TryParse(parts[0], out var r) && int.TryParse(parts[1], out var c))
+                {
+                    return new Turn(r, c, guess);
+                }
+
+                return null;
             }
 
             public int Row => _row;
@@ -303,22 +381,21 @@ namespace Yord.Crack.Begin.Chapter7
             public bool IsGuess => _isGuess;
         }
 
-        // результат хода
-        public class UserPlayResult
+        public class TurnResult
         {
-            // успешен ли ход вообще
-            private bool _successful;
-            private Game.GameState _resultingState;
+            private GameState _state;
 
-            public UserPlayResult(bool successful, Game.GameState state)
+            private bool _isSuccessful;
+
+            public TurnResult(GameState state, bool isSuccessful)
             {
-                _successful = successful;
-                _resultingState = state;
+                _state = state;
+                _isSuccessful = isSuccessful;
             }
 
-            public bool IsSuccessfulMove => _successful;
+            public bool IsSuccessfulMove => _isSuccessful;
 
-            public Game.GameState ResultingState => _resultingState;
+            public GameState State => _state;
         }
     }
 }
