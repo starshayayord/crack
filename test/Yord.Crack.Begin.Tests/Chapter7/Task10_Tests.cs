@@ -9,7 +9,7 @@ namespace Yord.Crack.Begin.Tests.Chapter7
     public class Task10_Tests
     {
         [Test]
-        public void Should()
+        public void Should_PlayGame()
         {
             var game = new Task10.Game(1, 2, 1);
             game.Start();
