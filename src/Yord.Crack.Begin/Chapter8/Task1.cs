@@ -6,8 +6,35 @@ namespace Yord.Crack.Begin.Chapter8
     // Рассчитать кол-во возможных вариантов перемещения
     public class Task1
     {
+        // попробуем считать снизу, начиная с базовых случаев
+        // базовые F(<0) = 0; F(0) = 1, F(1) = 1, F(2) = 2
+        public static int CountWays3(int n)
+        {
+            switch (n)
+            {
+                case 0:
+                case 1:
+                    return 1;
+                case 2:
+                    return 2;
+            }
+
+            var nMin3 = 1; //F(0)
+            var nMin2 = 1; //F(1)
+            var nMin1 = 2; //F(2)
+            for (var i = 3; i < n; i++)
+            {
+                var nextVar = nMin3 + nMin2 + nMin1;
+                nMin3 = nMin2;
+                nMin2 = nMin1;
+                nMin1 = nextVar;
+            }
+
+            return nMin1 + nMin2 + nMin3;
+        }
+
         // в массиве будет лежать не более N+1 значений
-        public static int CountWays(int n)
+        public static int CountWaysRec(int n)
         {
             var memo = new int[n + 1];
             for (var i = 0; i <= n; i++)
@@ -18,10 +45,10 @@ namespace Yord.Crack.Begin.Chapter8
                 memo[i] = -1;
             }
 
-            return CountWays(n, memo);
+            return CountWaysRec(n, memo);
         }
 
-        private static int CountWays(int n, int[] memo)
+        private static int CountWaysRec(int n, int[] memo)
         {
             if (n < 0)
             {
@@ -51,7 +78,7 @@ namespace Yord.Crack.Begin.Chapter8
             // Необходимо СЛОЖИТЬ все варианты поднятия на (N-1), (N-2), (N-3), т.к. они взаимоисключающие 
             // То, что пути где-то в глубине пересекаются - не важно, потому что конец у них всегда разный, т.е.
             // последнее число 1, 2, или 3, поэтому пути разщные
-            memo[n] = CountWays(n - 1, memo) + CountWays(n - 2, memo) + CountWays(n - 3, memo);
+            memo[n] = CountWaysRec(n - 1, memo) + CountWaysRec(n - 2, memo) + CountWaysRec(n - 3, memo);
             return memo[n];
         }
 
