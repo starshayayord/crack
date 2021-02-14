@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Yord.Crack.Begin.Chapter8
 {
@@ -6,6 +8,10 @@ namespace Yord.Crack.Begin.Chapter8
     // Рассчитать кол-во возможных вариантов перемещения
     public class Task1
     {
+        
+        
+        
+        
         // попробуем считать снизу, начиная с базовых случаев
         // базовые F(<0) = 0; F(0) = 1, F(1) = 1, F(2) = 2
         public static int CountWays3(int n)
@@ -22,6 +28,8 @@ namespace Yord.Crack.Begin.Chapter8
             var nMin3 = 1; //F(0)
             var nMin2 = 1; //F(1)
             var nMin1 = 2; //F(2)
+            // Важно понимать, что каждый из путей формируется за счет разных базовых случаев.
+            // То есть можно сделать ИЛИ 1, ИЛИ 2 ИЛИ 3 шага. соответственно к конц
             for (var i = 3; i < n; i++)
             {
                 var nextVar = nMin3 + nMin2 + nMin1;

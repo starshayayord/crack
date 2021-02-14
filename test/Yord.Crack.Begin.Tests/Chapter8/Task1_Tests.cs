@@ -7,6 +7,28 @@ namespace Yord.Crack.Begin.Tests.Chapter8
     public class Task1_Tests
     {
         [Test]
+        public void Test_PartSum1()
+        {
+            var grid = new int[3][];
+            grid[0] = new[] {1, 3, 1};
+            grid[1] = new[] {1, 5, 1};
+            grid[2] = new[] {4, 2, 1};
+            
+            Assert.AreEqual(7, MinSum.MinPathSum(grid));
+        }
+        
+        [Test]
+        public void Test_PartSum2()
+        {
+            var grid = new int[3][];
+            grid[0] = new[] {1, 3, 1};
+            grid[1] = new[] {1, 5, 1};
+            grid[2] = new[] {4, 2, 1};
+            
+            Assert.AreEqual(7, MinSum.MinPathSum2(grid));
+        }
+        
+        [Test]
         public void Should_CheckLadderVars()
         {
             Assert.AreEqual(1, Task1.CountWays2(1));
