@@ -39,8 +39,8 @@ namespace Yord.Crack.Begin.Chapter8
         // Берем A[5]=3. Т.к. A[mid] < mid. Волшебный элемент находится слева или справа.
         // Если он слева, то он не где угодно слева, т.к.
         // чтобы A[4] был вошлебным, надо, чтоб его значение было равно 4. А оно мб только <=3 
-        // Значит волшебный индекс лежит от 0 до Min(mid-1, A[mid])
-        // Если он справа, то он от [Max(A[mid], mid +1), a.Length-1]
+        // Значит волшебный индекс лежит от 0 до Min(mid-1, A[mid]) - индекс не мб больше, чем значение
+        // Если он справа, то он от [Max(A[mid], mid +1), a.Length-1] - индекс не мб меньше, чем значение
         public static int? FindMagicIndexWithRepeats(int[] arr)
         {
             return FindMagicIndexWithRepeats(arr, 0, arr.Length - 1);
