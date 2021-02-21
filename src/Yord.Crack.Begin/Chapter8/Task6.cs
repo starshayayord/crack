@@ -14,7 +14,7 @@ namespace Yord.Crack.Begin.Chapter8
             var sourceTower = new Tower(1,n);
             var resultTower = new Tower(2);
             var bufferTower = new Tower(3);
-            MoveTopNDisks(n, sourceTower, resultTower, bufferTower);
+            MoveDisks(n, sourceTower, resultTower, bufferTower);
             return resultTower;
         }
 
@@ -22,16 +22,16 @@ namespace Yord.Crack.Begin.Chapter8
         // 2 диска: перемещаем 1 верхний на буфер, потом оставшийся 1 на результат, 1 с буфера на результат
         // 3 диска: перемещаем 2 верхних на буфер, потом оставшийся 1 на результат, 2 с буфера на результат
         // 4 диска: перемещаем 3 верхних на буфер, потом оставшийся 1 на результат, 3 с буфера на результат
-        private static void MoveTopNDisks(int n, Tower source, Tower result, Tower buffer)
+        private static void MoveDisks(int n, Tower source, Tower result, Tower buffer)
         {
             if (n == 0) 
                 return; // нечего перемещать
             //переместить все верхние диски, кроме одного на буфер
-            MoveTopNDisks(n - 1, source, buffer, result);
+            MoveDisks(n - 1, source, buffer, result);
             //переместить нижний диск на результирующую башню, создав основание
             MoveTopDisk(source, result);
             // переместить все оставшиеся диски с буфера на результат
-            MoveTopNDisks(n - 1, buffer, result, source);
+            MoveDisks(n - 1, buffer, result, source);
         }
 
         private static void MoveTopDisk(Tower from, Tower to)
@@ -42,8 +42,7 @@ namespace Yord.Crack.Begin.Chapter8
 
         public class Tower
         {
-            public Stack<int> _tower { get; set; }
-            public bool IsEmpty => _tower.Count == 0;
+            public Stack<int> _tower { get;}
             private readonly int Number;
             public Tower(int number, int n = 0)
             {
@@ -60,16 +59,15 @@ namespace Yord.Crack.Begin.Chapter8
                 return _tower.Pop();
             }
 
-            public bool PlaceOnTop(int diskSize)
+            public void PlaceOnTop(int diskSize)
             {
                 // диски уникальны
                 if (_tower.Count > 0 && _tower.Peek() < diskSize)
                 {
-                    return false;
+                    return;
                 }
 
                 _tower.Push(diskSize);
-                return true;
             }
         }
     }
