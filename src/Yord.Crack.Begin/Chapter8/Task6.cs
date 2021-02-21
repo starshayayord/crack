@@ -11,27 +11,26 @@ namespace Yord.Crack.Begin.Chapter8
     {
         public static Tower MoveDisks(int n)
         {
-            var sourceTower = new Tower(1,n);
+            var sourceTower = new Tower(1, n);
             var resultTower = new Tower(2);
             var bufferTower = new Tower(3);
-            MoveDisks(n, sourceTower, resultTower, bufferTower);
+            MoveNDisks(n, sourceTower, resultTower, bufferTower);
             return resultTower;
         }
 
-        //  1 диск: перемещаем 0 верхних на буфер, потом оставшийся 1 на результат, 0 с буфера на результат
+        // 1 диск: перемещаем 0 верхних на буфер, потом оставшийся 1 на результат, 0 с буфера на результат
         // 2 диска: перемещаем 1 верхний на буфер, потом оставшийся 1 на результат, 1 с буфера на результат
         // 3 диска: перемещаем 2 верхних на буфер, потом оставшийся 1 на результат, 2 с буфера на результат
         // 4 диска: перемещаем 3 верхних на буфер, потом оставшийся 1 на результат, 3 с буфера на результат
-        private static void MoveDisks(int n, Tower source, Tower result, Tower buffer)
+        private static void MoveNDisks(int n, Tower source, Tower result, Tower buffer)
         {
-            if (n == 0) 
-                return; // нечего перемещать
-            //переместить все верхние диски, кроме одного на буфер
-            MoveDisks(n - 1, source, buffer, result);
-            //переместить нижний диск на результирующую башню, создав основание
+            if (n == 0) return; // нечего перемещать
+            // переместить все верхние диски, кроме одного на буфер
+            MoveNDisks(n - 1, source, buffer, result);
+            // переместить нижний диск на результирующую башню, создав основание
             MoveTopDisk(source, result);
             // переместить все оставшиеся диски с буфера на результат
-            MoveDisks(n - 1, buffer, result, source);
+            MoveNDisks(n - 1, buffer, result, source);
         }
 
         private static void MoveTopDisk(Tower from, Tower to)
@@ -42,8 +41,9 @@ namespace Yord.Crack.Begin.Chapter8
 
         public class Tower
         {
-            public Stack<int> _tower { get;}
+            public Stack<int> _tower { get; }
             private readonly int Number;
+
             public Tower(int number, int n = 0)
             {
                 _tower = new Stack<int>();
