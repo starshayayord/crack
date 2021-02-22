@@ -12,8 +12,8 @@ namespace Yord.Crack.Begin.Chapter8
         public static Tower MoveDisks(int n)
         {
             var sourceTower = new Tower(1, n);
-            var resultTower = new Tower(2);
-            var bufferTower = new Tower(3);
+            var resultTower = new Tower(3);
+            var bufferTower = new Tower(2);
             MoveNDisks(n, sourceTower, resultTower, bufferTower);
             return resultTower;
         }
@@ -22,9 +22,16 @@ namespace Yord.Crack.Begin.Chapter8
         // 2 диска: перемещаем 1 верхний на буфер, потом оставшийся 1 на результат, 1 с буфера на результат
         // 3 диска: перемещаем 2 верхних на буфер, потом оставшийся 1 на результат, 2 с буфера на результат
         // 4 диска: перемещаем 3 верхних на буфер, потом оставшийся 1 на результат, 3 с буфера на результат
+        // Пример:
+        // 3 диска: перемещаем 2 верхних на буфер, потом оставшийся 1 на результат, 2 с буфера на результат
+        // 2 верхних c (1) на буфер: 1 (1) -> (3) теперь это буфер, 1 (1) -> (2), (3) -> (2)
+        // оставшийся 1 на результат: 1 (1) -> (3)
+        // 2 с буфера на результат: 1 (2) -> (1), 1 (2) -> (3), 1 (1) -> (3)
+
         private static void MoveNDisks(int n, Tower source, Tower result, Tower buffer)
         {
-            if (n == 0) return; // нечего перемещать
+            if (n == 0) 
+                return; // нечего перемещать
             // переместить все верхние диски, кроме одного на буфер
             MoveNDisks(n - 1, source, buffer, result);
             // переместить нижний диск на результирующую башню, создав основание

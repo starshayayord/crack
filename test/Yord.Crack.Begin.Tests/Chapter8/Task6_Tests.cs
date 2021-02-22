@@ -37,5 +37,13 @@ namespace Yord.Crack.Begin.Tests.Chapter8
 
             CollectionAssert.AreEqual(new[] {1, 2, 3, 4}, resultTower._tower);
         }
+        
+        [Test]
+        public void Should_MoveDisks_5Disks()
+        {
+            var resultTower = Task6.MoveDisks(5);
+
+            CollectionAssert.AreEqual(new[] {1, 2, 3, 4, 5}, resultTower._tower);
+        }
     }
 }
