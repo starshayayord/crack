@@ -14,5 +14,14 @@ namespace Yord.Crack.Begin.Tests.LeetCode
         {
             return Task1221.BalancedStringSplit(s);
         }
+        
+        [TestCase("RLRRLLRLRL", ExpectedResult = 4)]
+        [TestCase("RLLLLRRRLR", ExpectedResult = 3)]
+        [TestCase("LLLLRRRR", ExpectedResult = 1)]
+        [TestCase("RLRRRLLRLL", ExpectedResult = 2)]
+        public int Should_SplitBalancedString_Stackk(string s)
+        {
+            return Task1221.BalancedStringSplit_Stack(s);
+        }
     }
 }
