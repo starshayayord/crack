@@ -1,5 +1,3 @@
-using System;
-
 namespace Yord.Crack.Begin.Chapter5
 {
     // Содержимое монохромного экрана хранится в одномерном массиве байтов

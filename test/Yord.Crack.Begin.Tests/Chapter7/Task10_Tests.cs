@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using NUnit.Framework;
 using Yord.Crack.Begin.Chapter7;
 

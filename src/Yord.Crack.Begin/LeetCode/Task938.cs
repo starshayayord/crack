@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Yord.Crack.Begin.LeetCode
 {
     // Дано BST. Вернуть сумму значений в диапазоне (включительно)

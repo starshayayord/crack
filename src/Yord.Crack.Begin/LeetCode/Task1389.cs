@@ -1,5 +1,3 @@
-using System;
-
 namespace Yord.Crack.Begin.LeetCode
 {
     //https://leetcode.com/problems/create-target-array-in-the-given-order/discuss/695423/O(NLogN)-Java-Solution-using-Merge-Sort-with-Pen-Paper-Explanation

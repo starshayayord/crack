@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 
 namespace Yord.Crack.Begin.Chapter7
