@@ -1,4 +1,4 @@
-namespace Yord.Crack.Begin
+namespace Yord.Crack.Begin.Chapter2
 {
     public class LinkedLists
     {

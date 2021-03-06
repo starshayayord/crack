@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Yord.Crack.Begin.Chapter2;
 
 namespace Yord.Crack.Begin.Tests.Chapter2
 {
