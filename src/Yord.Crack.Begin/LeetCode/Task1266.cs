@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace Yord.Crack.Begin.LeetCode
 {
@@ -14,18 +13,12 @@ namespace Yord.Crack.Begin.LeetCode
         public static int MinTimeToVisitAllPoints(int[][] points)
         {
             int sec = 0;
-            for (int i = 0; i < points.Length - 1; i++)
+            for (int i = 1; i < points.Length; i++)
             {
-                int x1 = points[i][0];
-                int y1 = points[i][1];
-                int x2 = points[i+1][0];
-                int y2 = points[i+1][1];
-                sec += Math.Max(Math.Abs(x2 - x1), Math.Abs(y2-y1));
+                sec += Math.Max(Math.Abs(points[i - 1][0] - points[i][0]), Math.Abs(points[i - 1][1] - points[i][1]));
             }
 
             return sec;
-            
-            
         }
     }
 }
