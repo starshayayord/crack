@@ -35,5 +35,15 @@ namespace Yord.Crack.Begin.Tests.LeetCode
             triplets = Task1534.CountGoodTriplets_Cache(new[] {1, 1, 2, 2, 3}, 0, 0, 1);
             Assert.AreEqual(0, triplets);
         }
+        
+        [Test]
+        public void Should_FindTriplets_Sum()
+        {
+            var triplets = Task1534.CountGoodTriplets_Sum(new[] {3, 0, 1, 1, 9, 7}, 7, 2, 3);
+            Assert.AreEqual(4, triplets);
+            
+            triplets = Task1534.CountGoodTriplets_Sum(new[] {1, 1, 2, 2, 3}, 0, 0, 1);
+            Assert.AreEqual(0, triplets);
+        }
     }
 }
