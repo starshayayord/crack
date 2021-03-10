@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Yord.Crack.Begin.LeetCode
 {
+    //вернуть кол-во уникальных строк после преобразования в строку по алфавиту морзе
     public class Task804
     {
         public static int UniqueMorseRepresentations(string[] words)
