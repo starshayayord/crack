@@ -1,10 +1,6 @@
-using System;
-
 namespace Yord.Crack.Begin.LeetCode
 {
     //0 <= A[i] <= 5000, вернуть массив из четных,за которыми следуют нечетные
-    //
-    //
     public class Task905
     {
         public static int[] SortArrayByParity(int[] A)
