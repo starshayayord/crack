@@ -11,9 +11,9 @@ namespace Yord.Crack.Begin.Tests.LeetCode
         {
             CollectionAssert.AreEquivalent(new[] {"e", "l", "l"},
                 Task1002.CommonChars(new[] {"bella", "label", "roller"}));
-            
+
             CollectionAssert.AreEquivalent(new[] {"c", "o"},
-                Task1002.CommonChars(new[] {"cool","lock","cook"}));
+                Task1002.CommonChars(new[] {"cool", "lock", "cook"}));
         }
     }
 }
