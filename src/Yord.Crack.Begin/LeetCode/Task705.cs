@@ -1,22 +1,250 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Yord.Crack.Begin.LeetCode
 {
     //0 <= element <= 1000000
     public class Task705
     {
-        public class MyHashSet
+        public class MyHashSet_BST
         {
+            /** Initialize your data structure here. */
+            private const double RehashRate = 0.75;
+            private int Capacity = 100;
+            private int Size = 0;
+            private BSTNode[] Elements;
 
+            public MyHashSet_BST()
+            {
+                Elements = new BSTNode[Capacity];
+            }
+
+            public void Add(int key)
+            {
+                int b = GetBucket(key);
+                if (Elements[b] == null)
+                {
+                    Elements[b] = new BSTNode(key);
+                    Size++;
+                }
+                else
+                {
+                    var r = Elements[b].Add(new BSTNode(key));
+                    if (r)
+                    {
+                        Size++;
+                    }
+                }
+
+                if (Size > Capacity * RehashRate)
+                {
+                    Rehash();
+                }
+            }
+
+            public void Remove(int key)
+            {
+                int b = GetBucket(key);
+                if (Elements[b] != null)
+                {
+                    var r = Elements[b].Remove(key);
+                    if (r.Item2)
+                    {
+                        Elements[b] = r.Item1;
+                        Size--;
+                    }
+                }
+            }
+
+            /** Returns true if this set contains the specified element */
+            public bool Contains(int key)
+            {
+                int b = GetBucket(key);
+                if (Elements[b] != null)
+                {
+                    return Elements[b].Contains(key);
+                }
+
+                return false;
+            }
+
+            private int GetBucket(int key)
+            {
+                return key % Capacity;
+            }
+
+            private void Rehash()
+            {
+                Capacity *= 2;
+                var newElements = new BSTNode[Capacity];
+                foreach (var element in Elements)
+                {
+                    if (element != null)
+                    {
+                        foreach (var node in element.AllNodes())
+                        {
+                            if (node== null) continue;
+                            var b = GetBucket(node.Data);
+                            if (newElements[b] != null)
+                            {
+                                newElements[b].Add(new BSTNode(node.Data));
+                            }
+                            else
+                            {
+                                newElements[b] = new BSTNode(node.Data);
+                            }
+                        }
+                    }
+                }
+
+                Elements = newElements;
+            }
+
+            private class BSTNode
+            {
+                public int Data;
+                private BSTNode Right;
+                private BSTNode Left;
+
+                public BSTNode(int data)
+                {
+                    Data = data;
+                }
+
+                public bool Add(BSTNode node)
+                {
+                    if (Data == node.Data) return false;
+                    if (node.Data > Data)
+                    {
+                        if (Right == null)
+                        {
+                            Right = node;
+                        }
+                        else
+                        {
+                            Right.Add(node);
+                        }
+                    }
+                    else
+                    {
+                        if (Left == null)
+                        {
+                            Left = node;
+                        }
+                        else
+                        {
+                            Left.Add(node);
+                        }
+                    }
+
+                    return true;
+                }
+
+                public bool Contains(int data)
+                {
+                    if (Data == data) return true;
+                    if (data > Data)
+                    {
+                        if (Right == null)
+                        {
+                            return false;
+                        }
+
+                        return Right.Contains(data);
+                    }
+
+                    if (Left == null)
+                    {
+                        return false;
+                    }
+
+                    return Left.Contains(data);
+                }
+
+                public Tuple<BSTNode, bool> Remove(int data)
+                {
+                    bool r = false;
+                    if (Data == data)
+                    {
+                        r = true;
+                        if (Right == null && Left == null)
+                        {
+                            return new Tuple<BSTNode, bool>(null, true);
+                        }
+
+                        if (Right == null || Left == null)
+                        {
+                            return Right == null
+                                ? new Tuple<BSTNode, bool>(Left, true)
+                                : new Tuple<BSTNode, bool>(Right, true);
+                        }
+
+                        Data = Left.FindMax().Data;
+                        Left.Remove(Data);
+                    }
+
+                    if (Data > data && Left != null)
+                    {
+                        r = Left.Remove(data).Item2;
+                    }
+
+                    if (Data < data && Right != null)
+                    {
+                        r = Right.Remove(data).Item2;
+                    }
+
+                    return new Tuple<BSTNode, bool>(this, r);
+                }
+
+                public LinkedList<BSTNode> AllNodes()
+                {
+                    var q = new Queue<BSTNode>();
+                    var l = new LinkedList<BSTNode>();
+                    q.Enqueue(this);
+                    while (q.Any())
+                    {
+                        var n = q.Dequeue();
+                        l.AddFirst(n);
+                        if (n.Left != null)
+                        {
+                            q.Enqueue(n.Left);
+                        }
+
+                        if (n.Right != null)
+                        {
+                            q.Enqueue(n.Right);
+                        }
+                    }
+
+                    return l;
+                }
+
+                private BSTNode FindMax()
+                {
+                    BSTNode node = this;
+                    while (node.Right != null)
+                    {
+                        node = node.Right;
+                    }
+
+                    return node;
+                }
+            }
+        }
+
+        public class MyHashSet_LL
+        {
             private const double RehashCapacity = 0.75;
             private int Capacity = 10;
             private int Count;
-            private LinkedList<int>[] Buckets;  
-            public MyHashSet()
+            private LinkedList<int>[] Buckets;
+
+            public MyHashSet_LL()
             {
                 Buckets = new LinkedList<int>[Capacity];
             }
-    
+
             public void Add(int key)
             {
                 if (Contains(key)) return;
@@ -37,13 +265,14 @@ namespace Yord.Crack.Begin.LeetCode
 
                     Buckets = newBuckets;
                 }
+
                 int b = key % Capacity;
                 Buckets[b] ??= new LinkedList<int>();
                 Buckets[b].AddLast(key);
                 Count++;
             }
-    
-            public void Remove(int key) 
+
+            public void Remove(int key)
             {
                 if (!Contains(key)) return;
                 int b = key % Capacity;
@@ -58,7 +287,7 @@ namespace Yord.Crack.Begin.LeetCode
             }
         }
 
-        
+
         public class MyHashSet_Bit
         {
             private int[] elements;
