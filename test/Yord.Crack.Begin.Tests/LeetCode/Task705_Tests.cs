@@ -9,7 +9,6 @@ namespace Yord.Crack.Begin.Tests.LeetCode
         [Test]
         public void Should_UseMyHashSet_BST()
         {
-           
             var t = new Task705.MyHashSet_BST();
             Assert.IsFalse(t.Contains(88));
             t.Remove(130);
