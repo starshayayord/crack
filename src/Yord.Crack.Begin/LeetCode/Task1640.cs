@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Yord.Crack.Begin.LeetCode
 {
@@ -10,6 +9,7 @@ namespace Yord.Crack.Begin.LeetCode
     {
         public static bool CanFormArray(int[] arr, int[][] pieces)
         {
+            
             int i = 0;
             while (i < arr.Length)
             {
