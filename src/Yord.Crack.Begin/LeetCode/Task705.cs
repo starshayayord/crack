@@ -8,32 +8,6 @@ namespace Yord.Crack.Begin.LeetCode
     //0 <= element <= 1000000
     public class Task705
     {
-        public static void Generate(string cmd, string num, string res)
-        {
-            var sb = new StringBuilder();
-            var cmdAdd = cmd.Split(",");
-            var numAdd = num.Split(",");
-            var resAdd = res.Split(",");
-            for (int i = 0; i < cmdAdd.Length; i++)
-            {
-                switch (cmdAdd[i])
-                {
-                    case "contains":
-                        sb.Append(resAdd[i] == "true"
-                            ? $"Assert.IsTrue(t.Contains({numAdd[i]}));\n"
-                            : $"Assert.IsFalse(t.Contains({numAdd[i]}));\n");
-                        break;
-                    case "add":
-                        sb.Append($"t.Add({numAdd[i]});\n");
-                        break;
-                    case "remove":
-                        sb.Append($"t.Remove({numAdd[i]});\n");
-                        break;
-                }
-            }
-
-            var r = sb.ToString();
-        }
         public class MyHashSet_BST
         {
             /** Initialize your data structure here. */
