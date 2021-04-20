@@ -39,15 +39,17 @@ namespace Yord.Crack.Begin.LeetCode
 
             private void Recover(int val, TreeNode node)
             {
-                if (node == null)
+                values.Add(val);
+                val <<= 1;
+                if (node.left != null)
                 {
-                    return;
+                    Recover(val + 1, node.left);
                 }
 
-                node.val = val;
-                values.Add(val);
-                Recover(2 * val + 1, node.left);
-                Recover(2 * val + 2, node.right);
+                if (node.right != null)
+                {
+                    Recover(val + 2, node.right);
+                }
             }
         }
     }
