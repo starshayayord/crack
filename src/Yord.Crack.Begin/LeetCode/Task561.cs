@@ -38,7 +38,7 @@ namespace Yord.Crack.Begin.LeetCode
                 {
                     if (odd)
                     {
-                        r += i - 1000;
+                        r += i - 10000;
                     }
 
                     odd = !odd;
