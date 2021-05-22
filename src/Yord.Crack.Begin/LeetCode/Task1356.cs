@@ -9,11 +9,29 @@ namespace Yord.Crack.Begin.LeetCode
     //0 <= arr[i] <= 10^4
     public class Task1356
     {
+        public static int[] SortByBits3(int[] arr)
+        {
+            var res = new int[arr.Length];
+            //наибольшее число 10000, значит берем на 1 больше и умножим на кол-во единиц
+            //добавим исходное число, что было, из чего восстановить + отсортировать числа с одинаковым кол-вом 1
+            for (int i = 0; i < arr.Length; i++) {
+                res[i] = Count1(arr[i])*10001 + arr[i];
+            }
+            //отсортируем полученный массив
+            Array.Sort(res);
+            //восстановим его
+            for (int i = 0; i < arr.Length; i++) {
+                res[i] %= 10001;
+            }
+        
+            return res;
+        }
+        
         //макс число - 10^4. Число единиц более значимое, потом отсортируем по самому числа.
         //Представим число как число единиц*10000 + arr[i]
         public static int[] SortByBits2(int[] arr)
         {
-            return arr.OrderBy(Count1).ThenBy(x => x).ToArray();
+            return arr.OrderBy(Count1).ToArray();
         }
         
         public static int[] SortByBits(int[] arr)
