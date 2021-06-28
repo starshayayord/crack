@@ -6,31 +6,32 @@ namespace Yord.Crack.Begin.Tests.LeetCode
     [TestFixture]
     public class Task206_Tests
     {
-        [TestCase(10, ExpectedResult = 4)]
-        [TestCase(0, ExpectedResult = 0)]
-        [TestCase(1, ExpectedResult = 0)]
-        [TestCase(499979, ExpectedResult = 41537)]
-        public int Should_CountPrimes_Simple(int n)
+        [Test]
+        public void Should_Reverse()
         {
-            return Task206.CountPrimes_Simple(n);
+            var head = new Task206.ListNode(1,
+                new Task206.ListNode(2,
+                    new Task206.ListNode(3,
+                        new Task206.ListNode(4, new Task206.ListNode(5, new Task206.ListNode(6))))));
+            Assert.AreEqual(6, Task206.ReverseList(head).val);
+
+            head = new Task206.ListNode(1, new Task206.ListNode(2));
+            Assert.AreEqual(2, Task206.ReverseList(head).val);
+            Assert.AreEqual(null, Task206.ReverseList(null));
         }
         
-        [TestCase(10, ExpectedResult = 4)]
-        [TestCase(0, ExpectedResult = 0)]
-        [TestCase(1, ExpectedResult = 0)]
-        [TestCase(499979, ExpectedResult = 41537)]
-        public int Should_CountPrimes(int n)
+        [Test]
+        public void Should_Reverse2()
         {
-            return Task206.CountPrimes(n);
-        }
-        
-        [TestCase(10, ExpectedResult = 4)]
-        [TestCase(0, ExpectedResult = 0)]
-        [TestCase(1, ExpectedResult = 0)]
-        [TestCase(499979, ExpectedResult = 41537)]
-        public int Should_CountPrimes_LinearErato(int n)
-        {
-            return Task206.CountPrimes_LinearErato(n);
+            var head = new Task206.ListNode(1,
+                new Task206.ListNode(2,
+                    new Task206.ListNode(3,
+                        new Task206.ListNode(4, new Task206.ListNode(5, new Task206.ListNode(6))))));
+            Assert.AreEqual(6, Task206.ReverseList2(head).val);
+
+            head = new Task206.ListNode(1, new Task206.ListNode(2));
+            Assert.AreEqual(2, Task206.ReverseList2(head).val);
+            Assert.AreEqual(null, Task206.ReverseList2(null));
         }
     }
 }
