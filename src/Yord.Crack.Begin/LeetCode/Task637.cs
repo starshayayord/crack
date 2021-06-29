@@ -56,26 +56,24 @@ namespace Yord.Crack.Begin.LeetCode
             while (queue.Any())
             {
                 long sum = 0;
-                var count = 0;
-                var temp = new Queue<TreeNode>();
-                while (queue.Any())
+                var count = queue.Count;//сколько нод текущего уровня
+                for (var i = 0; i < count; i++)
                 {
-                    var n = queue.Dequeue(); //берем ноду, пока очередь с текущем уровнем не опустеет
+                    var n = queue.Dequeue();
+                    //суммируем текущий уровень, добавляя предыдущий
                     sum += n.val;
-                    count++;
-                    //параллельно кладем следующтй уровень
                     if (n.left != null)
                     {
-                        temp.Enqueue(n.left);
+                        queue.Enqueue(n.left);
                     }
 
                     if (n.right != null)
                     {
-                        temp.Enqueue(n.right);
+                        queue.Enqueue(n.right);
                     }
+                    
                 }
-
-                queue = temp; //очередь следующего уровня
+                
                 res.Add((double) sum / count);
             }
 
