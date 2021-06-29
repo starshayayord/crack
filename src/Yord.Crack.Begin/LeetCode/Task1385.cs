@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace Yord.Crack.Begin.LeetCode
 {
@@ -6,6 +7,37 @@ namespace Yord.Crack.Begin.LeetCode
     //-10^3 <= arr1[i], arr2[j] <= 10^3
     public class Task1385
     {
+        public static int FindTheDistanceValue2(int[] arr1, int[] arr2, int d)
+        {
+            Array.Sort(arr2);
+            return arr1.Count(a1 => IsValid(arr2, a1, d));
+        }
+
+        private static bool IsValid(int[] arr, int v, int d)
+        {
+            var l = 0;
+            var r = arr.Length -1;
+            while (l <= r)
+            {
+                var mid = (l + r) / 2;
+                if (Math.Abs(arr[mid] - v) <= d)
+                {
+                    return false;
+                }
+
+                if (arr[mid] > v)
+                {
+                    r = mid-1;
+                }
+                else
+                {
+                    l = mid + 1;
+                }
+            }
+
+            return true;
+        }
+
         public static int FindTheDistanceValue(int[] arr1, int[] arr2, int d)
         {
             var f2 = new int[2 * 1000 + 1];

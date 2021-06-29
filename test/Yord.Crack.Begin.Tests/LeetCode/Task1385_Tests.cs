@@ -7,11 +7,19 @@ namespace Yord.Crack.Begin.Tests.LeetCode
     public class Task1385_Tests
     {
         [Test]
-        public void Should_()
+        public void Should_FindTheDistanceValue()
         {
             Assert.AreEqual(2, Task1385.FindTheDistanceValue(new[] {4, 5, 8}, new[] {10, 9, 1, 8}, 2));
             Assert.AreEqual(2, Task1385.FindTheDistanceValue(new[] {1, 4, 2, 3}, new[] {-4, -3, 6, 10, 20, 30}, 3));
             Assert.AreEqual(1, Task1385.FindTheDistanceValue(new[] {2, 1, 100, 3}, new[] {-5, -2, 10, -3, 7}, 6));
+        }
+        
+        [Test]
+        public void Should_FindTheDistanceValue2()
+        {
+            Assert.AreEqual(2, Task1385.FindTheDistanceValue2(new[] {4, 5, 8}, new[] {10, 9, 1, 8}, 2));
+            Assert.AreEqual(2, Task1385.FindTheDistanceValue2(new[] {1, 4, 2, 3}, new[] {-4, -3, 6, 10, 20, 30}, 3));
+            Assert.AreEqual(1, Task1385.FindTheDistanceValue2(new[] {2, 1, 100, 3}, new[] {-5, -2, 10, -3, 7}, 6));
         }
     }
 }
