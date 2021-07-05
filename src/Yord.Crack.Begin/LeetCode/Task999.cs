@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Yord.Crack.Begin.LeetCode
 {
     public class Task999
@@ -27,7 +25,7 @@ namespace Yord.Crack.Begin.LeetCode
             return 0;
         }
 
-        public static int Capture(char[][] board, int x, int y, int dx, int dy)
+        private static int Capture(char[][] board, int x, int y, int dx, int dy)
         {
             while (x >= 0 && x < 8 && y >= 0 && y < 8 && board[x][y] != 'B')
             {
